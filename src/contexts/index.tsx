@@ -48,8 +48,22 @@ export type GlobalContextState = {
   products: Product[];
 };
 
+// Configurar Web3 con fallback a Ganache local
+const getWeb3Provider = () => {
+  if (typeof window !== 'undefined' && window.ethereum) {
+    return window.ethereum;
+  } else if (Web3.givenProvider) {
+    return Web3.givenProvider;
+  } else {
+    // Fallback a Ganache local
+    return new Web3.providers.HttpProvider('http://127.0.0.1:7545');
+  }
+};
+
+const web3Instance = new Web3(getWeb3Provider());
+
 const initialState: GlobalContextState = {
-  web3: new Web3(Web3.givenProvider),
+  web3: web3Instance,
   account: '',
   managerContract: {} as Contract,
   entity: EmptyEntity,
@@ -57,12 +71,15 @@ const initialState: GlobalContextState = {
   products: []
 };
 
-initialState.managerContract = new initialState.web3.eth.Contract(
-  ManagerCompiledContract.abi as AbiItem[],
-  ManagerCompiledContract.networks[5777].address
-);
+// Solo inicializar el contrato si la red está disponible
+if (ManagerCompiledContract.networks && ManagerCompiledContract.networks['5777']) {
+  initialState.managerContract = new initialState.web3.eth.Contract(
+    ManagerCompiledContract.abi as AbiItem[],
+    ManagerCompiledContract.networks['5777'].address
+  );
+}
 
-const EmptyPromise = new Promise<any>(() => {});
+const EmptyPromise = new Promise<any>(() => { });
 
 type Context = {
   globalState: GlobalContextState;

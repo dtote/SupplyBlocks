@@ -28,7 +28,7 @@ const useStyles = makeStyles<Theme>((theme) => ({
     textTransform: 'none',
     letterSpacing: 0,
     width: '100%',
-    fontWeight: theme.typography.fontWeightMedium
+    fontWeight: theme.typography.fontWeightMedium as number
   },
   icon: {
     width: 24,

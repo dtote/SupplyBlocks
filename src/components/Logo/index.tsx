@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import {
   default as LogoPNG,
   default as LogoWithTitlePNG
-} from '../../assets/Logo.png';
+} from '../../assets/logo.png';
 import { ApplicationRoutes } from '../../routes';
 
 interface Props {
