@@ -72,10 +72,10 @@ const initialState: GlobalContextState = {
 };
 
 // Solo inicializar el contrato si la red está disponible
-if (ManagerCompiledContract.networks && ManagerCompiledContract.networks['5777']) {
+if (ManagerCompiledContract.networks && (ManagerCompiledContract.networks as any)['5777']) {
   initialState.managerContract = new initialState.web3.eth.Contract(
     ManagerCompiledContract.abi as AbiItem[],
-    ManagerCompiledContract.networks['5777'].address
+    (ManagerCompiledContract.networks as any)['5777'].address
   );
 }
 
@@ -136,7 +136,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
 
   const getEntity = useCallback(
     (account: Address) => {
-      if (account === defaultAddress || account === '' || !account) {
+      if (account === defaultAddress || account === '' || !account || !state.managerContract.methods) {
         return;
       }
       return state.managerContract.methods
@@ -199,7 +199,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
 
   // On component mount
   useEffect(() => {
-    state.web3.eth.getAccounts((error, accounts) => {
+    state.web3.eth.getAccounts((error: any, accounts: any) => {
       if (accounts) updateAccount(accounts[0]);
     });
   }, []);
@@ -279,12 +279,12 @@ const GlobalContextProvider: React.FC = ({ children }) => {
           entity.type === 'Warehouse' || entity.type === 'Transport'
       );
       const route = getRoute(entities, enqueueSnackbar);
-      if (route === []) {
+      if (route.length === 0) {
         return;
       }
 
       const productArray = state.products.filter(
-        (product) => productAddress === product.id
+        (product: Product) => productAddress === product.id
       );
 
       if (productArray.length > 1) {
@@ -301,7 +301,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         productAddress
       );
       return contractInstance.methods
-        .purchase(route, ManagerCompiledContract.networks[5777].address)
+        .purchase(route, (ManagerCompiledContract.networks as any)[5777].address)
         .send({ from: state.account })
         .then(() => {
           updateProducts();
