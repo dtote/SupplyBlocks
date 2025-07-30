@@ -11,6 +11,7 @@ Aplicación de blockchain para la orquestación de cadena de suministros
 - **MetaMask** (extensión del navegador)
 
 > **Nota:** TypeScript 4.9.5 se instala automáticamente (compatible con react-scripts 5.0.1)
+> **Nota:** Los archivos de migración están incluidos en el repositorio, no necesitas crearlos
 
 ### Pasos para hacer funcionar la app
 
@@ -30,6 +31,7 @@ npm install
 #### 3. **Desplegar contratos**
 
 ```bash
+# Los archivos de migración ya están incluidos en el repositorio
 npm run migrate
 ```
 
