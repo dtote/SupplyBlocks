@@ -6,11 +6,13 @@ Aplicación de blockchain para la orquestación de cadena de suministros
 
 ### Prerrequisitos
 
-- **Node.js 18.x** (obligatorio)
+- **Node.js 18.x**
 - **Ganache** (blockchain local)
 - **MetaMask** (extensión del navegador)
 
-### Pasos
+> **Nota:** TypeScript 4.9.5 se instala automáticamente (compatible con react-scripts 5.0.1)
+
+### Pasos para hacer funcionar la app
 
 #### 1. **Instalar dependencias**
 
@@ -25,13 +27,9 @@ npm install
 - Abrir Ganache
 - Asegurar que esté en puerto **7545**
 
-#### 3. **Compilar y desplegar contratos**
+#### 3. **Desplegar contratos**
 
 ```bash
-# Compilar contratos y generar tipos TypeScript
-npm run postinstall
-
-# Desplegar contratos (migraciones en JavaScript)
 npm run migrate
 ```
 
@@ -56,93 +54,15 @@ npm start
 
 - Ir a `http://localhost:3000`
 - Clic en "Connect Wallet"
-- **IMPORTANTE:** Verificar que MetaMask esté en red "Ganache" (no Mainnet)
-
-## 🔧 Solución de Problemas
-
-### Error "Returned values aren't valid"
-
-```bash
-# Verificar Ganache
-curl -X POST -H "Content-Type: application/json" \
-  --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' \
-  http://127.0.0.1:7545
-
-# Redeployar contratos
-npm run migrate
-```
-
-### Error de TypeScript
-
-```bash
-# Regenerar tipos de contratos
-npm run generate-types
-```
-
-### Error "Module not found"
-
-- Verificar Node.js 18.x: `node --version`
-- Cambiar versión: `nvm use 18`
-- Reinstalar dependencias: `npm install`
-
-### Error de compilación de contratos
-
-```bash
-# Limpiar y recompilar
-rm -rf src/contracts
-npm run postinstall
-```
-
-### Error de migraciones TypeScript
-
-Si encuentras errores de tipos en las migraciones, las migraciones están configuradas en JavaScript para evitar problemas de compatibilidad:
-
-```bash
-# Las migraciones están en JavaScript, no TypeScript
-# Archivos: migrations/1_initial_migration.js, migrations/2_deploy_contracts.js
-```
-
-## 📁 Estructura del Proyecto
-
-```
-SupplyBlocks/
-├── contracts/          # Contratos Solidity
-│   ├── Entity.sol
-│   ├── Manager.sol
-│   ├── Product.sol
-│   └── TypesLibrary.sol
-├── migrations/         # Migraciones JavaScript
-├── src/
-│   ├── components/     # Componentes React
-│   ├── contexts/       # Contextos de React
-│   ├── hooks/          # Hooks personalizados
-│   ├── types/          # Tipos TypeScript generados
-│   ├── utils/          # Utilidades
-│   └── views/          # Vistas de la aplicación
-└── truffle-config.js   # Configuración de Truffle
-```
-
-## 🛠️ Scripts Disponibles
-
-- `npm start` - Inicia la aplicación de desarrollo
-- `npm run build` - Construye la aplicación para producción
-- `npm run migrate` - Compila y despliega contratos
-- `npm run generate-types` - Genera tipos TypeScript desde contratos
-- `npm run postinstall` - Compila contratos y genera tipos automáticamente
+- **IMPORTANTE:** Verificar que MetaMask esté en red "Ganache"
 
 ## ✅ Checklist
 
 - [ ] Node.js 18.x
 - [ ] Ganache corriendo (puerto 7545)
-- [ ] Contratos compilados y desplegados
-- [ ] Tipos TypeScript generados
+- [ ] Dependencias instaladas (`npm install`)
+- [ ] Contratos desplegados (`npm run migrate`)
 - [ ] MetaMask en red "Ganache"
 - [ ] Wallet conectada
 
 ¡Listo! La aplicación debería funcionar. 🎉
-
-## 🔄 Flujo de Desarrollo
-
-1. **Modificar contratos** → `npm run postinstall`
-2. **Desplegar cambios** → `npm run migrate`
-3. **Desarrollar frontend** → `npm start`
