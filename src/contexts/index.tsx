@@ -51,13 +51,34 @@ export type GlobalContextState = {
 // Configurar Web3 con fallback a Ganache local
 const getWeb3Provider = () => {
   if (typeof window !== 'undefined' && window.ethereum) {
-    return window.ethereum;
+    // Verificar si MetaMask está disponible y no tiene el circuit breaker abierto
+    try {
+      if (window.ethereum.isMetaMask) {
+        return window.ethereum;
+      }
+    } catch (error) {
+      console.warn('MetaMask circuit breaker error:', error);
+      // Si hay error de circuit breaker, intentar con fallback
+    }
   } else if (Web3.givenProvider) {
     return Web3.givenProvider;
-  } else {
-    // Fallback a Ganache local
-    return new Web3.providers.HttpProvider('http://127.0.0.1:7545');
   }
+
+  // Fallback a Ganache local
+  return new Web3.providers.HttpProvider('http://127.0.0.1:7545');
+};
+
+// Función para reiniciar la conexión Web3
+const resetWeb3Connection = () => {
+  try {
+    if (window.ethereum && window.ethereum.request) {
+      // Intentar reiniciar la conexión
+      return window.ethereum.request({ method: 'eth_requestAccounts' });
+    }
+  } catch (error) {
+    console.warn('Error al reiniciar conexión:', error);
+  }
+  return Promise.reject(new Error('No se pudo reiniciar la conexión'));
 };
 
 const web3Instance = new Web3(getWeb3Provider());
@@ -161,7 +182,21 @@ const GlobalContextProvider: React.FC = ({ children }) => {
                 type: 'UPDATE_ENTITY',
                 entity: convertEntity(result)
               });
+            })
+            .catch((error: any) => {
+              console.warn('Error al obtener datos de entidad:', error);
+              if (error.message && error.message.includes('circuit breaker')) {
+                console.log('Detectado error de circuit breaker, intentando reiniciar conexión...');
+                resetWeb3Connection();
+              }
             });
+        })
+        .catch((error: any) => {
+          console.warn('Error al obtener entidad:', error);
+          if (error.message && error.message.includes('circuit breaker')) {
+            console.log('Detectado error de circuit breaker, intentando reiniciar conexión...');
+            resetWeb3Connection();
+          }
         });
     },
     [state.managerContract]

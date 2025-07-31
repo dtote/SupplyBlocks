@@ -65,12 +65,25 @@ const OnAccountChange = (
 
 const CheckMetamask = (
   valueSetter: useStateBooleanSetter,
-  errorSetter: useStateBooleanSetter
+  errorSetter: useStateBooleanSetter,
+  circuitBreakerSetter?: useStateBooleanSetter
 ) => () => {
   if (!window.ethereum) {
     errorSetter(true);
   } else {
-    valueSetter(window.ethereum.selectedAddress);
+    try {
+      valueSetter(window.ethereum.selectedAddress);
+      // Verificar si hay error de circuit breaker
+      if (circuitBreakerSetter) {
+        circuitBreakerSetter(false);
+      }
+    } catch (error: any) {
+      if (error.message && error.message.includes('circuit breaker')) {
+        if (circuitBreakerSetter) {
+          circuitBreakerSetter(true);
+        }
+      }
+    }
   }
 };
 
@@ -108,7 +121,7 @@ const EnableMetamask = (
     });
 };
 
-interface Props {}
+interface Props { }
 
 // TODO: Clean imports, warnings, unused makeStyles classes and document smart contracts
 // TODO: Reorganize types
@@ -117,17 +130,18 @@ export const App: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [web3ProviderError, setWeb3ProviderError] = useState(false);
+  const [circuitBreakerError, setCircuitBreakerError] = useState(false);
   const { web3 } = globalState;
   const { enqueueSnackbar } = useSnackbar();
   const [isMetamaskEnabled, setIsMetamaskEnabled] = useState(true);
 
   // On component mount
   useEffect(() => {
-    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError);
+    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError, setCircuitBreakerError);
   }, []);
 
   const checkMetamask = useCallback(
-    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError),
+    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError, setCircuitBreakerError),
     []
   );
 
@@ -141,6 +155,21 @@ export const App: React.FC<Props> = (props) => {
   useEffect(() => {
     OnAccountChange(updateAccount, enqueueSnackbar, setIsMetamaskEnabled, web3);
   }, [updateAccount, enqueueSnackbar, web3]);
+
+  // Función para reiniciar la conexión cuando hay error de circuit breaker
+  const resetConnection = useCallback(() => {
+    if (window.ethereum && window.ethereum.request) {
+      window.ethereum.request({ method: 'eth_requestAccounts' })
+        .then(() => {
+          setCircuitBreakerError(false);
+          enqueueSnackbar('Conexión reiniciada exitosamente', { variant: 'success' });
+        })
+        .catch((error: any) => {
+          console.warn('Error al reiniciar conexión:', error);
+          enqueueSnackbar('Error al reiniciar conexión', { variant: 'error' });
+        });
+    }
+  }, [enqueueSnackbar]);
 
   let appBody: JSX.Element = <AppBody />;
 
@@ -177,6 +206,24 @@ export const App: React.FC<Props> = (props) => {
         errorName="Connection"
         errorMessage="Start Ganache and configure Metamask network"
       ></ErrorView>
+    );
+  }
+
+  if (circuitBreakerError) {
+    appBody = (
+      <ErrorView
+        errorName="MetaMask Circuit Breaker"
+        errorMessage="MetaMask ha bloqueado las transacciones por seguridad. Intenta reiniciar la conexión."
+      >
+        <Button
+          color="secondary"
+          className={classes.button}
+          variant="contained"
+          onClick={resetConnection}
+        >
+          Reiniciar Conexión
+        </Button>
+      </ErrorView>
     );
   }
 
