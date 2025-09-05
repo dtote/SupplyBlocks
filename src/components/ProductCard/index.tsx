@@ -212,7 +212,7 @@ const ProductCard: React.FC<Props> = (props) => {
           />
         </CardActions>
       )}
-      {state === 'Created' && purchased && isFactory && (
+      {state === 'Created' && !purchased && isFactory && (
         <CardActions className={classes.cardActions}>
           <CardButton
             text="Prepare"
