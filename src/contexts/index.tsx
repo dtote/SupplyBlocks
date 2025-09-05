@@ -48,23 +48,40 @@ export type GlobalContextState = {
   products: Product[];
 };
 
-// Configurar Web3 con fallback a Ganache local
+// Configurar Web3 con configuración permanente para Ganache
 const getWeb3Provider = () => {
   if (typeof window !== 'undefined' && window.ethereum) {
     // Verificar si MetaMask está disponible y no tiene el circuit breaker abierto
     try {
       if (window.ethereum.isMetaMask) {
-        return window.ethereum;
+        // Verificar si está en la red correcta
+        const networkVersion = window.ethereum.networkVersion;
+
+        if (networkVersion === '1337') {
+          return window.ethereum;
+        } else if (networkVersion === null || networkVersion === undefined) {
+          console.log('MetaMask aún no está completamente inicializado. Esperando...');
+          // Retornar el provider de todos modos, la red se verificará más tarde
+          return window.ethereum;
+        } else {
+          console.log('MetaMask no está en la red Ganache (1337). Red actual:', networkVersion);
+          // Intentar cambiar a la red correcta
+          window.ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x539' }] // 1337 en hexadecimal
+          }).catch(() => {
+            console.log('No se pudo cambiar a Ganache automáticamente');
+          });
+        }
       }
     } catch (error) {
       console.warn('MetaMask circuit breaker error:', error);
-      // Si hay error de circuit breaker, intentar con fallback
     }
   } else if (Web3.givenProvider) {
     return Web3.givenProvider;
   }
 
-  // Fallback a Ganache local
+  // Fallback a Ganache local con configuración fija
   return new Web3.providers.HttpProvider('http://127.0.0.1:7545');
 };
 
@@ -81,6 +98,28 @@ const resetWeb3Connection = () => {
   return Promise.reject(new Error('No se pudo reiniciar la conexión'));
 };
 
+// Función para verificar si Ganache está disponible
+const checkGanacheConnection = async () => {
+  try {
+    const response = await fetch('http://127.0.0.1:7545', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        method: 'eth_blockNumber',
+        params: [],
+        id: 1
+      })
+    });
+    return response.ok;
+  } catch (error) {
+    console.warn('Ganache no está disponible:', error);
+    return false;
+  }
+};
+
 const web3Instance = new Web3(getWeb3Provider());
 
 const initialState: GlobalContextState = {
@@ -93,10 +132,10 @@ const initialState: GlobalContextState = {
 };
 
 // Solo inicializar el contrato si la red está disponible
-if (ManagerCompiledContract.networks && (ManagerCompiledContract.networks as any)['5777']) {
+if (ManagerCompiledContract.networks && (ManagerCompiledContract.networks as any)['1337']) {
   initialState.managerContract = new initialState.web3.eth.Contract(
     ManagerCompiledContract.abi as AbiItem[],
-    (ManagerCompiledContract.networks as any)['5777'].address
+    (ManagerCompiledContract.networks as any)['1337'].address
   );
 }
 
@@ -234,6 +273,22 @@ const GlobalContextProvider: React.FC = ({ children }) => {
 
   // On component mount
   useEffect(() => {
+    // Verificar red después de un breve delay para asegurar que MetaMask esté listo
+    const checkNetwork = async () => {
+      if (window.ethereum) {
+        try {
+          const networkId = await window.ethereum.request({ method: 'net_version' });
+          if (networkId !== '1337') {
+            console.log('Verificación de red: MetaMask en red', networkId, ', esperada: 1337');
+          }
+        } catch (error) {
+          console.warn('No se pudo verificar la red:', error);
+        }
+      }
+    };
+
+    setTimeout(checkNetwork, 1000); // Verificar después de 1 segundo
+
     state.web3.eth.getAccounts((error: any, accounts: any) => {
       if (accounts) updateAccount(accounts[0]);
     });
@@ -336,7 +391,7 @@ const GlobalContextProvider: React.FC = ({ children }) => {
         productAddress
       );
       return contractInstance.methods
-        .purchase(route, (ManagerCompiledContract.networks as any)[5777].address)
+        .purchase(route, (ManagerCompiledContract.networks as any)[1337].address)
         .send({ from: state.account })
         .then(() => {
           updateProducts();

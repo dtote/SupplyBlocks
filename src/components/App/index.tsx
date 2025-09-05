@@ -1,9 +1,9 @@
 import {
   Button,
-  createMuiTheme,
   makeStyles,
   ThemeProvider
 } from '@material-ui/core';
+import { createTheme } from '@material-ui/core/styles';
 import { OptionsObject, SnackbarProvider, useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { GlobalContext, GlobalContextProvider } from '../../contexts';
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   }
 });
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: { main: '#558bc4ff' },
     secondary: { main: '#00ae9aff' },
@@ -110,7 +110,7 @@ const EnableMetamask = (
   }
 
   window.ethereum
-    .enable()
+    .request({ method: 'eth_requestAccounts' })
     .then(() => {
       metamaskEnabledSetter(true);
       enqueueSnackbar('Metamask enabled', { variant: 'success' });
@@ -171,6 +171,43 @@ export const App: React.FC<Props> = (props) => {
     }
   }, [enqueueSnackbar]);
 
+  // Función para reconectar automáticamente con Ganache
+  const reconnectToGanache = useCallback(() => {
+    enqueueSnackbar('Reconectando con Ganache...', { variant: 'info' });
+
+    // Intentar cambiar a la red de Ganache
+    if (window.ethereum && window.ethereum.request) {
+      window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [{
+          chainId: '0x539', // 1337 en hexadecimal
+          chainName: 'Ganache',
+          nativeCurrency: {
+            name: 'ETH',
+            symbol: 'ETH',
+            decimals: 18
+          },
+          rpcUrls: ['http://127.0.0.1:7545'],
+          blockExplorerUrls: []
+        }]
+      }).then(() => {
+        enqueueSnackbar('Red Ganache añadida exitosamente', { variant: 'success' });
+      }).catch((error: any) => {
+        console.warn('Error al añadir red Ganache:', error);
+        // Si ya existe la red, intentar cambiar a ella
+        window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0x1691' }]
+        }).then(() => {
+          enqueueSnackbar('Conectado a Ganache', { variant: 'success' });
+        }).catch((switchError: any) => {
+          console.warn('Error al cambiar a Ganache:', switchError);
+          enqueueSnackbar('Error al conectar con Ganache', { variant: 'error' });
+        });
+      });
+    }
+  }, [enqueueSnackbar]);
+
   let appBody: JSX.Element = <AppBody />;
 
   if (!isMetamaskEnabled) {
@@ -205,7 +242,25 @@ export const App: React.FC<Props> = (props) => {
       <ErrorView
         errorName="Connection"
         errorMessage="Start Ganache and configure Metamask network"
-      ></ErrorView>
+      >
+        <Button
+          color="secondary"
+          className={classes.button}
+          variant="contained"
+          onClick={reconnectToGanache}
+          style={{ marginRight: '10px' }}
+        >
+          Reconectar Ganache
+        </Button>
+        <Button
+          color="primary"
+          className={classes.button}
+          variant="contained"
+          onClick={() => window.location.reload()}
+        >
+          Recargar Página
+        </Button>
+      </ErrorView>
     );
   }
 
