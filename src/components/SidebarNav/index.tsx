@@ -4,11 +4,9 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles,
-  Theme,
   Tooltip
-} from '@material-ui/core';
-import clsx from 'clsx';
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
@@ -17,38 +15,33 @@ import {
   ExtendedRoute
 } from '../../routes';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    marginBottom: theme.spacing(2)
-  },
-  button: {
-    color: colors.blueGrey[800],
-    padding: '6px 8px',
-    justifyContent: 'flex-start',
-    textTransform: 'none',
-    letterSpacing: 0,
-    width: '100%',
-    fontWeight: theme.typography.fontWeightMedium as number
-  },
-  icon: {
-    width: 24,
-    minWidth: 24,
-    height: 24,
-    display: 'flex',
-    alignItems: 'center',
-    marginRight: theme.spacing(1)
-  },
-  label: {
-    '& span': {
-      fontSize: 16
-    }
-  },
-  active: {
-    color: theme.palette.secondary.main,
-    '& span': {
-      fontSize: 18
-    }
+const StyledList = styled(List)(({ theme }) => ({
+  marginBottom: theme.spacing(2)
+}));
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  color: colors.blueGrey[800],
+  padding: '6px 8px',
+  justifyContent: 'flex-start',
+  textTransform: 'none',
+  letterSpacing: 0,
+  width: '100%',
+  fontWeight: theme.typography.fontWeightMedium as number,
+  cursor: 'pointer',
+  borderRadius: theme.spacing(1),
+  margin: theme.spacing(0.5, 0),
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover
   }
+}));
+
+const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({
+  width: 24,
+  minWidth: 24,
+  height: 24,
+  display: 'flex',
+  alignItems: 'center',
+  marginRight: theme.spacing(1)
 }));
 
 interface Props {
@@ -57,7 +50,7 @@ interface Props {
 
 const SidebarNav: React.FC<Props> = (props) => {
   const { pages } = props;
-  const classes = useStyles();
+
   let history = useHistory();
   const [active, setActive] = useState(history.location.pathname);
 
@@ -70,7 +63,7 @@ const SidebarNav: React.FC<Props> = (props) => {
 
   const clickCallback = useCallback(
     (page: ExtendedRoute) => (
-      event: React.MouseEvent<HTMLDivElement, MouseEvent>
+      event: React.MouseEvent<HTMLLIElement, MouseEvent>
     ) => {
       setActive(page.path);
       history.push(page.path);
@@ -83,37 +76,38 @@ const SidebarNav: React.FC<Props> = (props) => {
   }, [history.location]);
 
   return (
-    <List className={classes.root}>
+    <StyledList>
       {Object.keys(pages).map((key, index) => {
         const page = pages[key];
         const activePage = page.path === active;
         return (
           <Tooltip key={index} title={page.label} aria-label={page.label}>
-            <ListItem
-              className={classes.button}
-              button
+            <StyledListItem
               onClick={clickCallback(page)}
+              sx={{
+                color: activePage ? 'secondary.main' : 'inherit'
+              }}
             >
-              <ListItemIcon
-                className={clsx({
-                  [classes.icon]: true,
-                  [classes.active]: activePage
-                })}
+              <StyledListItemIcon
+                sx={{
+                  color: activePage ? 'secondary.main' : 'inherit'
+                }}
               >
                 {page.icon}
-              </ListItemIcon>
+              </StyledListItemIcon>
               <ListItemText
-                className={clsx({
-                  [classes.label]: true,
-                  [classes.active]: activePage
-                })}
                 primary={page.label}
+                sx={{
+                  '& span': {
+                    fontSize: activePage ? 18 : 16
+                  }
+                }}
               />
-            </ListItem>
+            </StyledListItem>
           </Tooltip>
         );
       })}
-    </List>
+    </StyledList>
   );
 };
 

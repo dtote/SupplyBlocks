@@ -1,29 +1,27 @@
-import { Divider, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Box, Divider, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing(2)
-  },
-  divider: {
-    backgroundColor: theme.palette.primary.main
-  },
-  title: {
-    padding: theme.spacing(0, 2)
-  }
+const StyledTitleContainer = styled(Box)(({ theme }) => ({
+  width: '100%',
+  marginTop: theme.spacing(2),
+  marginBottom: theme.spacing(2)
 }));
 
 const Title: React.FC<{ title: string }> = ({ title }) => {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <Typography className={classes.title} variant="h4" color="primary">
+    <StyledTitleContainer>
+      <Typography
+        variant="h4"
+        color="primary"
+        sx={{
+          padding: theme => theme.spacing(0, 2)
+        }}
+      >
         {title}
-        <Divider className={classes.divider} />
+        <Divider sx={{ backgroundColor: 'primary.main' }} />
       </Typography>
-    </div>
+    </StyledTitleContainer>
   );
 };
 

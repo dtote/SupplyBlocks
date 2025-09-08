@@ -5,14 +5,12 @@ import {
   CircularProgress,
   Collapse,
   IconButton,
-  makeStyles,
-  Theme,
   Tooltip,
   Typography,
   useTheme
-} from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import clsx from 'clsx';
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext, useState } from 'react';
 import { GlobalContext } from '../../contexts';
 import { Address } from '../../types';
@@ -21,54 +19,60 @@ import { getTimelineElements } from '../../utils';
 import ProductStateChip from '../ProductStateChip';
 import Timeline from '../Timeline';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    width: '100%'
-  },
-  cardHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(2)
-  },
-  deliveryState: {
-    marginRight: theme.spacing(2)
-  },
-  grow: {
-    flexGrow: 1
-  },
-  expand: {
-    transform: 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest
-    })
-  },
-  expandOpen: {
-    transform: 'rotate(180deg)'
-  },
-  cardContent: {
-    padding: 0,
-    '&:last-child': {
-      padding: 0
-    }
-  },
-  wrapper: {
-    marginRight: theme.spacing(2),
-    position: 'relative'
-  },
-  button: {
-    color: 'white'
-  },
-  buttonProgress: {
-    color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
-  },
-  timelineContainer: {
-    padding: theme.spacing(2)
+const StyledCard = styled(Card)({
+  width: '100%'
+});
+
+const CardHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2)
+}));
+
+const DeliveryState = styled('div')(({ theme }) => ({
+  marginRight: theme.spacing(2)
+}));
+
+const GrowDiv = styled('div')({
+  flexGrow: 1
+});
+
+const ExpandButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== 'expanded',
+})<{ expanded?: boolean }>(({ theme, expanded }) => ({
+  transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest
+  })
+}));
+
+const StyledCardContent = styled(CardContent)({
+  padding: 0,
+  '&:last-child': {
+    padding: 0
   }
+});
+
+const ButtonWrapper = styled('div')(({ theme }) => ({
+  marginRight: theme.spacing(2),
+  position: 'relative'
+}));
+
+const StyledButton = styled(Button)({
+  color: 'white'
+});
+
+const ButtonProgress = styled(CircularProgress)(({ theme }) => ({
+  color: theme.palette.secondary.main,
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  marginTop: -12,
+  marginLeft: -12
+}));
+
+const TimelineContainer = styled('div')(({ theme }) => ({
+  padding: theme.spacing(2)
 }));
 
 interface TimestampButtonProps {
@@ -78,26 +82,24 @@ interface TimestampButtonProps {
 }
 
 const TimestampButton: React.FC<TimestampButtonProps> = (props) => {
-  const classes = useStyles();
   return (
-    <div className={classes.wrapper}>
+    <ButtonWrapper>
       <Tooltip title="Timestamp" aria-label={'timestamp'}>
         <div>
-          <Button
+          <StyledButton
             variant="contained"
             color="secondary"
-            className={classes.button}
             onClick={props.onClickCallback}
             disabled={props.disabled || props.transacting}
           >
             Timestamp
-          </Button>
+          </StyledButton>
         </div>
       </Tooltip>
       {props.transacting && (
-        <CircularProgress size={24} className={classes.buttonProgress} />
+        <ButtonProgress size={24} />
       )}
-    </div>
+    </ButtonWrapper>
   );
 };
 
@@ -118,7 +120,6 @@ interface Props extends Product {
 }
 
 const DeliveryCard: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const theme = useTheme();
   const {
     id,
@@ -149,16 +150,16 @@ const DeliveryCard: React.FC<Props> = (props) => {
   const isFactory = globalState.entity.type === 'Factory';
 
   return (
-    <Card className={classes.root}>
-      <CardContent className={classes.cardContent}>
-        <div className={classes.cardHeader}>
-          <div className={classes.deliveryState}>
+    <StyledCard>
+      <StyledCardContent>
+        <CardHeader>
+          <DeliveryState>
             <ProductStateChip state={state} showIcon />
-          </div>
+          </DeliveryState>
           <Typography variant="h5" noWrap>
             {name}
           </Typography>
-          <div className={classes.grow} />
+          <GrowDiv />
           {nextEntity && !isFactory && (
             <TimestampButton
               onClickCallback={onTimestampCallback}
@@ -166,24 +167,22 @@ const DeliveryCard: React.FC<Props> = (props) => {
               transacting={props.transacting}
             />
           )}
-          <IconButton
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded
-            })}
+          <ExpandButton
+            expanded={expanded}
             onClick={handleExpandClick}
             aria-expanded={expanded}
             aria-label="show more"
           >
             <ExpandMoreIcon />
-          </IconButton>
-        </div>
+          </ExpandButton>
+        </CardHeader>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <div className={classes.timelineContainer}>
+          <TimelineContainer>
             <DeliveryTimeline delivery={getProduct(id)} />
-          </div>
+          </TimelineContainer>
         </Collapse>
-      </CardContent>
-    </Card>
+      </StyledCardContent>
+    </StyledCard>
   );
 };
 

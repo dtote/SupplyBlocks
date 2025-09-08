@@ -1,46 +1,30 @@
 import {
   AppBar,
-  Hidden,
   IconButton,
-  makeStyles,
-  Theme,
   Toolbar,
   Tooltip,
   Typography,
   useMediaQuery,
   useTheme
-} from '@material-ui/core';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import MenuIcon from '@material-ui/icons/Menu';
+} from '@mui/material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { styled } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ApplicationRoutes } from '../../routes';
 import Logo from '../Logo';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    boxShadow: 'none'
-  },
-  flexGrow: {
-    flexGrow: 1
-  },
-  exitButton: {
-    marginLeft: theme.spacing(1)
-  },
-  title: {
-    color: 'white',
-    marginLeft: theme.spacing(2)
-  }
-}));
+// Usando clases CSS simples para evitar problemas de sintaxis
 
 interface Props {
   onSidebarOpen: () => void;
 }
 
 const Topbar: React.FC<Props> = (props) => {
-  const classes = useStyles();
+
   const theme = useTheme();
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true
   });
   const { onSidebarOpen } = props;
@@ -50,29 +34,29 @@ const Topbar: React.FC<Props> = (props) => {
   }, [history]);
 
   return (
-    <AppBar className={classes.root}>
+    <AppBar className="styled-root">
       <Toolbar>
         <Logo width={100} smallDevicesWidth={60} breakpoint="md" />
-        <Typography variant={isDesktop ? 'h4' : 'h5'} className={classes.title}>
+        <Typography variant={isLargeScreen ? 'h4' : 'h5'} className="styled-title">
           SupplyBlocks
         </Typography>
-        <div className={classes.flexGrow} />
+        <div className="styled-flexGrow" />
         <Tooltip title="Go back" aria-label="go-back">
           <IconButton
-            className={classes.exitButton}
+            className="styled-exitButton"
             onClick={clickCallback}
             color="inherit"
           >
             <ExitToAppIcon />
           </IconButton>
         </Tooltip>
-        <Hidden lgUp>
+        {!isLargeScreen && (
           <Tooltip title="Toggle menu" aria-label="toggle-menu">
             <IconButton color="inherit" onClick={onSidebarOpen}>
               <MenuIcon />
             </IconButton>
           </Tooltip>
-        </Hidden>
+        )}
       </Toolbar>
     </AppBar>
   );

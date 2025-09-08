@@ -1,90 +1,52 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CircularProgress,
-  Grid,
-  makeStyles,
-  Theme,
   Tooltip,
   Typography,
   useTheme
-} from '@material-ui/core';
-import EventIcon from '@material-ui/icons/Event';
-import FingerprintIcon from '@material-ui/icons/Fingerprint';
+} from '@mui/material';
+import EventIcon from '@mui/icons-material/Event';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import { styled } from '@mui/material/styles';
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../contexts';
 import { defaultAddress, getEntityTypesData } from '../../types';
 import { Product } from '../../types/Product';
 import ProductStateChip from '../ProductStateChip';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    maxWidth: 400,
-    width: '100%'
-  },
-  button: {
-    color: 'white'
-  },
-  address: {
-    fontSize: 10
-  },
-  infoItem: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: theme.spacing(1)
-  },
-  icon: {
-    marginRight: theme.spacing(1)
-  },
-  header: {
-    marginBottom: theme.spacing(3)
-  },
-  cardActions: {
-    justifyContent: 'center',
-    padding: 0
-  },
-  chipContainer: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  wrapper: {
-    margin: theme.spacing(3, 0, 2),
-    position: 'relative'
-  },
-  buttonProgress: {
-    color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
-  },
-  cardContent: {
-    padding: 0,
-    '&:last-child': {
-      padding: 0
-    }
-  }
-}));
+// Usando clases CSS simples para evitar problemas de sintaxis
 
 interface InfoItemProps {
   text: string;
-  icon: JSX.Element | React.Component;
+  icon: React.ReactNode;
   textClassName?: string;
 }
 
 export const InfoItem: React.FC<InfoItemProps> = (props) => {
-  const classes = useStyles();
   return (
-    <div className={classes.infoItem}>
-      {props.icon}
-      <Typography className={props.textClassName} noWrap>
+    <Box sx={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      mb: 1,
+      '& .MuiSvgIcon-root': {
+        mr: 1
+      }
+    }}>
+      <Box component="span" sx={{ display: 'flex', alignItems: 'center' }}>
+        {props.icon}
+      </Box>
+      <Typography 
+        className={props.textClassName} 
+        noWrap 
+        sx={{ fontSize: props.textClassName === 'styled-address' ? 10 : 'inherit' }}
+      >
         {props.text}
       </Typography>
-    </div>
+    </Box>
   );
 };
 
@@ -96,15 +58,19 @@ interface CardButtonProps {
 }
 
 const CardButton: React.FC<CardButtonProps> = (props) => {
-  const classes = useStyles();
   return (
-    <div className={classes.wrapper}>
+    <Box sx={{ 
+      margin: theme => theme.spacing(3, 0, 2), 
+      position: 'relative',
+      display: 'flex',
+      justifyContent: 'center'
+    }}>
       <Tooltip title={props.text} aria-label={props.text}>
         <div>
           <Button
             variant="contained"
             color="secondary"
-            className={classes.button}
+            sx={{ color: 'white' }}
             onClick={props.onClickCallback}
             disabled={props.disabled || props.transacting}
           >
@@ -113,9 +79,19 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
         </div>
       </Tooltip>
       {props.transacting && (
-        <CircularProgress size={24} className={classes.buttonProgress} />
+        <CircularProgress 
+          size={24} 
+          sx={{
+            color: theme => theme.palette.secondary.main,
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            marginTop: '-12px',
+            marginLeft: '-12px'
+          }}
+        />
       )}
-    </div>
+    </Box>
   );
 };
 
@@ -127,7 +103,6 @@ interface Props extends Product {
 }
 
 const ProductCard: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const theme = useTheme();
   const {
     name,
@@ -148,28 +123,37 @@ const ProductCard: React.FC<Props> = (props) => {
   const [deliveryTimestamp] = deliveryTimestamps.slice(-1);
 
   return (
-    <Card className={classes.root}>
-      <CardContent className={classes.cardContent}>
-        <Grid container className={classes.header}>
-          <Grid item xs={8}>
+    <Card sx={{ 
+      padding: 2, 
+      maxWidth: 400, 
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      <CardContent sx={{ 
+        padding: 0, 
+        '&:last-child': { paddingBottom: 0 },
+        flex: 1
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+          <Box sx={{ flexGrow: 1 }}>
             <Typography variant="h5" noWrap>
               {name}
             </Typography>
-          </Grid>
-          <Grid item xs={4}>
-            <div className={classes.chipContainer}>
-              <ProductStateChip state={state} showIcon />
-            </div>
-          </Grid>
-        </Grid>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <ProductStateChip state={state} showIcon />
+          </Box>
+        </Box>
         <InfoItem
           text={id}
-          textClassName={classes.address}
-          icon={<FingerprintIcon className={classes.icon} color="primary" />}
+          textClassName="styled-address"
+          icon={<FingerprintIcon className="styled-icon" color="primary" />}
         />
         <InfoItem
           text={creatorID}
-          textClassName={classes.address}
+          textClassName="styled-address"
           icon={
             getEntityTypesData({
               color: theme.palette.primary.main,
@@ -180,12 +164,12 @@ const ProductCard: React.FC<Props> = (props) => {
         />
         <InfoItem
           text={creationTimestamp.toUTCString()}
-          icon={<EventIcon className={classes.icon} color="primary" />}
+          icon={<EventIcon className="styled-icon" color="primary" />}
         />
         {purchased && (
           <InfoItem
             text={purchaserID!}
-            textClassName={classes.address}
+            textClassName="styled-address"
             icon={
               getEntityTypesData({
                 color: theme.palette.primary.main,
@@ -198,12 +182,12 @@ const ProductCard: React.FC<Props> = (props) => {
         {state === 'Delivered' && (
           <InfoItem
             text={deliveryTimestamp.toUTCString()}
-            icon={<EventIcon className={classes.icon} color="primary" />}
+            icon={<EventIcon className="styled-icon" color="primary" />}
           />
         )}
       </CardContent>
       {!purchased && isRetailer && (
-        <CardActions className={classes.cardActions}>
+        <CardActions sx={{ justifyContent: 'center', padding: 0 }}>
           <CardButton
             text="Purchase"
             onClickCallback={onPurchaseCallback}
@@ -213,7 +197,7 @@ const ProductCard: React.FC<Props> = (props) => {
         </CardActions>
       )}
       {state === 'Created' && !purchased && isFactory && (
-        <CardActions className={classes.cardActions}>
+        <CardActions sx={{ justifyContent: 'center', padding: 0 }}>
           <CardButton
             text="Prepare"
             onClickCallback={onPrepareCallback}
