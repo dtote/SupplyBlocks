@@ -1,41 +1,24 @@
 import {
+  Box,
+  Button,
   CircularProgress,
-  makeStyles,
-  Theme,
+  Grid,
   Tooltip
-} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+} from '@mui/material';
 import { Field, FormikProps } from 'formik';
-import { TextField } from 'formik-material-ui';
+import { TextField } from 'formik-mui';
 import React from 'react';
 
-const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  wrapper: {
-    margin: theme.spacing(3, 0, 2),
-    position: 'relative'
-  },
-  buttonProgress: {
-    color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
-  },
-  submit: {
-    color: 'white'
-  }
-}));
+// Usando clases CSS simples
 
 export interface CreateProductForm {
   name: string;
 }
 
-interface Props extends FormikProps<CreateProductForm> {}
+interface Props extends FormikProps<CreateProductForm> { }
 
 export const CreateProductForm: React.FC<Props> = (props) => {
-  const classes = useStyles();
+
   const { submitForm, isSubmitting, isValid } = props;
 
   return (
@@ -44,21 +27,24 @@ export const CreateProductForm: React.FC<Props> = (props) => {
         e.preventDefault();
       }}
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <Field
-            component={TextField}
-            variant="outlined"
-            color="secondary"
-            required
-            fullWidth
-            id="name"
-            label="Product Name"
-            name="name"
-          />
-        </Grid>
-      </Grid>
-      <div className={classes.wrapper}>
+      <Box sx={{ mb: 2 }}>
+        <Field
+          component={TextField}
+          variant="outlined"
+          color="secondary"
+          required
+          fullWidth
+          id="name"
+          label="Product Name"
+          name="name"
+        />
+      </Box>
+      <Box sx={{ 
+        margin: theme => theme.spacing(3, 0, 2), 
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
         <Tooltip title="Create product" aria-label="create-product">
           <div>
             <Button
@@ -66,7 +52,7 @@ export const CreateProductForm: React.FC<Props> = (props) => {
               fullWidth
               variant="contained"
               color="secondary"
-              className={classes.submit}
+              sx={{ color: 'white' }}
               onClick={submitForm}
               disabled={isSubmitting || !isValid}
             >
@@ -75,9 +61,19 @@ export const CreateProductForm: React.FC<Props> = (props) => {
           </div>
         </Tooltip>
         {isSubmitting && (
-          <CircularProgress size={24} className={classes.buttonProgress} />
+          <CircularProgress 
+            size={24} 
+            sx={{
+              color: theme => theme.palette.secondary.main,
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginTop: '-12px',
+              marginLeft: '-12px'
+            }}
+          />
         )}
-      </div>
+      </Box>
     </form>
   );
 };

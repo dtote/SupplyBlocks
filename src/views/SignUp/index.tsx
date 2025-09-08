@@ -1,12 +1,11 @@
 import {
   Button,
   Container,
-  makeStyles,
-  Theme,
   Tooltip,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import { Formik, FormikHelpers } from 'formik';
+import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -17,7 +16,7 @@ import { EntityType } from '../../types/Entity';
 import { SignUpForm, SignUpFormFields } from './Form';
 import { SignUpFormValidationSchema } from './ValidationSchema';
 
-const useStyles = makeStyles<Theme>((theme: Theme) => ({
+const StyledRoot = styled('div')(({ theme }) => ({
   root: {
     height: '100%',
     width: '100%',
@@ -50,10 +49,10 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   }
 }));
 
-interface Props {}
+interface Props { }
 
 export const SignUpView: React.FC<Props> = (props) => {
-  const classes = useStyles();
+
   const { enqueueSnackbar } = useSnackbar();
   const { globalState, createEntity } = useContext(GlobalContext);
   const [alreadyRegistered, setAlreadyRegistered] = useState(false);
@@ -90,27 +89,27 @@ export const SignUpView: React.FC<Props> = (props) => {
   }, [globalState.entity]);
 
   return (
-    <Container className={classes.root} component="main" maxWidth="sm">
-      <div className={classes.paper}>
+    <Container className="styled-root" component="main" maxWidth="sm">
+      <div className="styled-paper">
         <Logo width={260} smallDevicesWidth={260} />
         <Typography
-          className={classes.title}
+          className="styled-title"
           component="h1"
           variant="h4"
           align="center"
         >
           Send a petition for joining{' '}
-          <Typography className={classes.name} display="inline">
+          <Typography className="styled-name" display="inline">
             SupplyBlocks
           </Typography>
         </Typography>
         {pending && (
-          <Typography className={classes.message} variant="h6" align="center">
+          <Typography className="styled-message" variant="h6" align="center">
             Your petition is being studied
           </Typography>
         )}
         {alreadyRegistered && (
-          <Typography className={classes.message} variant="h6" align="center">
+          <Typography className="styled-message" variant="h6" align="center">
             Already registered
           </Typography>
         )}
@@ -134,7 +133,7 @@ export const SignUpView: React.FC<Props> = (props) => {
         </Formik>
         <Tooltip title="Cancel" aria-label="cancel">
           <Button
-            className={classes.cancelButton}
+            className="styled-cancelButton"
             fullWidth
             variant="contained"
             onClick={useCallback(() => {

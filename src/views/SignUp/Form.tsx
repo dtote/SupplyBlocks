@@ -1,40 +1,20 @@
 import {
+  Box,
+  Button,
   CircularProgress,
   FormControl,
   FormControlLabel,
+  Grid,
   InputLabel,
-  makeStyles,
   MenuItem,
-  Theme,
   Tooltip
-} from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+} from '@mui/material';
 import { Field, FormikProps } from 'formik';
-import { Checkbox, Select, TextField } from 'formik-material-ui';
+import { Checkbox, Select, TextField } from 'formik-mui';
 import React from 'react';
 import { EntityType, visibleEntityTypes } from '../../types/Entity';
 
-const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  wrapper: {
-    margin: theme.spacing(3, 0, 2),
-    position: 'relative'
-  },
-  buttonProgress: {
-    color: theme.palette.secondary.main,
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginTop: -12,
-    marginLeft: -12
-  },
-  selectField: {
-    width: '100%'
-  },
-  submit: {
-    color: 'white'
-  }
-}));
+// Usando clases CSS simples
 
 export interface SignUpFormFields {
   name: string;
@@ -49,7 +29,7 @@ interface Props extends FormikProps<SignUpFormFields> {
 }
 
 export const SignUpForm: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  
   const { submitForm, isSubmitting, isValid } = props;
 
   return (
@@ -58,8 +38,8 @@ export const SignUpForm: React.FC<Props> = (props) => {
         e.preventDefault();
       }}
     >
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box>
           <Field
             disabled={props.disabled}
             component={TextField}
@@ -71,8 +51,8 @@ export const SignUpForm: React.FC<Props> = (props) => {
             label="Company Name"
             name="name"
           />
-        </Grid>
-        <Grid item xs={12}>
+        </Box>
+        <Box>
           <Field
             disabled={props.disabled}
             component={TextField}
@@ -84,22 +64,23 @@ export const SignUpForm: React.FC<Props> = (props) => {
             label="Email"
             name="email"
           />
-        </Grid>
-        <Grid item xs={6}>
-          <Field
-            disabled={props.disabled}
-            component={TextField}
-            variant="outlined"
-            color="secondary"
-            required
-            fullWidth
-            id="phoneNumber"
-            label="Phone number"
-            name="phoneNumber"
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <FormControl variant="outlined" className={classes.selectField}>
+        </Box>
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ flex: 1 }}>
+            <Field
+              disabled={props.disabled}
+              component={TextField}
+              variant="outlined"
+              color="secondary"
+              required
+              fullWidth
+              id="phoneNumber"
+              label="Phone number"
+              name="phoneNumber"
+            />
+          </Box>
+          <Box sx={{ flex: 1 }}>
+            <FormControl variant="outlined" className="styled-selectField" fullWidth>
             <InputLabel>Company type</InputLabel>
             <Field
               disabled={props.disabled}
@@ -122,8 +103,9 @@ export const SignUpForm: React.FC<Props> = (props) => {
               ))}
             </Field>
           </FormControl>
-        </Grid>
-        <Grid item xs={12}>
+          </Box>
+        </Box>
+        <Box>
           <FormControlLabel
             control={
               <Field
@@ -138,9 +120,14 @@ export const SignUpForm: React.FC<Props> = (props) => {
             }
             label="I'm aware that registering an entity the active Metamask account is associated permanently to that entity."
           />
-        </Grid>
-      </Grid>
-      <div className={classes.wrapper}>
+        </Box>
+      </Box>
+      <Box sx={{ 
+        margin: theme => theme.spacing(3, 0, 2), 
+        position: 'relative',
+        display: 'flex',
+        justifyContent: 'center'
+      }}>
         <Tooltip title="Send petition" aria-label="send-petition">
           <div>
             <Button
@@ -148,7 +135,7 @@ export const SignUpForm: React.FC<Props> = (props) => {
               fullWidth
               variant="contained"
               color="secondary"
-              className={classes.submit}
+              sx={{ color: 'white' }}
               onClick={submitForm}
               disabled={isSubmitting || !isValid || props.disabled}
             >
@@ -157,9 +144,19 @@ export const SignUpForm: React.FC<Props> = (props) => {
           </div>
         </Tooltip>
         {isSubmitting && (
-          <CircularProgress size={24} className={classes.buttonProgress} />
+          <CircularProgress 
+            size={24} 
+            sx={{
+              color: theme => theme.palette.secondary.main,
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginTop: '-12px',
+              marginLeft: '-12px'
+            }}
+          />
         )}
-      </div>
+      </Box>
     </form>
   );
 };
