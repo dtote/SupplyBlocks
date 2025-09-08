@@ -190,7 +190,7 @@ const Reducer = (
 };
 
 // TODO: Fix renderer hooks
-const GlobalContextProvider: React.FC = ({ children }) => {
+const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(Reducer, initialState);
   const { enqueueSnackbar } = useSnackbar();
 

@@ -1,9 +1,9 @@
 import {
   Button,
-  makeStyles,
   ThemeProvider
-} from '@material-ui/core';
-import { createTheme } from '@material-ui/core/styles';
+} from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { OptionsObject, SnackbarProvider, useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { GlobalContext, GlobalContextProvider } from '../../contexts';
@@ -11,18 +11,17 @@ import { useInterval } from '../../hooks/useInterval';
 import ErrorView from '../../views/Error';
 import { AppBody } from '../AppBody';
 
-const useStyles = makeStyles({
-  appContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%'
-  },
-  button: {
-    maxWidth: 200,
-    color: 'white'
-  }
+const AppContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%'
+});
+
+const StyledButton = styled(Button)({
+  maxWidth: 200,
+  color: 'white'
 });
 
 const theme = createTheme({
@@ -127,7 +126,6 @@ interface Props { }
 // TODO: Reorganize types
 export const App: React.FC<Props> = (props) => {
   const { globalState, updateAccount } = useContext(GlobalContext);
-  const classes = useStyles();
   const [connectionError, setConnectionError] = useState(false);
   const [web3ProviderError, setWeb3ProviderError] = useState(false);
   const [circuitBreakerError, setCircuitBreakerError] = useState(false);
@@ -197,7 +195,7 @@ export const App: React.FC<Props> = (props) => {
         // Si ya existe la red, intentar cambiar a ella
         window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x1691' }]
+          params: [{ chainId: '0x539' }]
         }).then(() => {
           enqueueSnackbar('Conectado a Ganache', { variant: 'success' });
         }).catch((switchError: any) => {
@@ -216,14 +214,13 @@ export const App: React.FC<Props> = (props) => {
         errorName="Metamask"
         errorMessage="In order to use the dapp Metamask should have account authorization"
       >
-        <Button
+        <StyledButton
           color="secondary"
-          className={classes.button}
           variant="contained"
           onClick={EnableMetamask(setIsMetamaskEnabled, enqueueSnackbar)}
         >
           Enable Metamask
-        </Button>
+        </StyledButton>
       </ErrorView>
     );
   }
@@ -243,23 +240,21 @@ export const App: React.FC<Props> = (props) => {
         errorName="Connection"
         errorMessage="Start Ganache and configure Metamask network"
       >
-        <Button
+        <StyledButton
           color="secondary"
-          className={classes.button}
           variant="contained"
           onClick={reconnectToGanache}
           style={{ marginRight: '10px' }}
         >
           Reconectar Ganache
-        </Button>
-        <Button
+        </StyledButton>
+        <StyledButton
           color="primary"
-          className={classes.button}
           variant="contained"
           onClick={() => window.location.reload()}
         >
           Recargar Página
-        </Button>
+        </StyledButton>
       </ErrorView>
     );
   }
@@ -270,19 +265,18 @@ export const App: React.FC<Props> = (props) => {
         errorName="MetaMask Circuit Breaker"
         errorMessage="MetaMask ha bloqueado las transacciones por seguridad. Intenta reiniciar la conexión."
       >
-        <Button
+        <StyledButton
           color="secondary"
-          className={classes.button}
           variant="contained"
           onClick={resetConnection}
         >
           Reiniciar Conexión
-        </Button>
+        </StyledButton>
       </ErrorView>
     );
   }
 
-  return <div className={classes.appContainer}>{appBody}</div>;
+  return <AppContainer>{appBody}</AppContainer>;
 };
 
 const WrappedApp: React.FC = () => (
