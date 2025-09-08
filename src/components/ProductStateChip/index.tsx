@@ -1,12 +1,11 @@
-import { Chip, makeStyles, Theme } from '@material-ui/core';
+import { Chip } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import { getProductStatesData, ProductState } from '../../types/Product';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    border: '0px'
-  }
-}));
+const StyledChip = styled(Chip)({
+  border: '0px'
+});
 
 interface Props {
   state: ProductState;
@@ -19,15 +18,13 @@ const productStatesData = getProductStatesData({
 });
 
 const ProductStateChip: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const data = productStatesData[props.state];
   return (
-    <Chip
+    <StyledChip
       style={{
         background: data.color,
         color: 'white'
       }}
-      className={classes.root}
       icon={props.showIcon ? data.icon : undefined}
       label={data.label}
       variant="outlined"

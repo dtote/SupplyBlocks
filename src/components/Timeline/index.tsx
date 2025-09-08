@@ -1,4 +1,5 @@
-import { makeStyles, Theme, Typography } from '@material-ui/core';
+import { Theme, Typography  } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import {
   VerticalTimeline,
@@ -7,8 +8,7 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 
-const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  timeline: {
+const StyledTimeline = styled('div')(({ theme }) => ({timeline: {
     margin: theme.spacing(6, 0),
     '&::before': {
       background: 'black'
@@ -28,8 +28,7 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   },
   elementTitle: {
     marginBottom: theme.spacing(2)
-  }
-}));
+  }}));
 
 export interface TimelineElement
   extends Omit<VerticalTimelineElementProps, 'date'> {
@@ -45,19 +44,19 @@ interface Props {
 }
 
 export const Timeline: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  
 
   if (props.elements.length === 0) {
     return props.emptyElements ? props.emptyElements : <></>;
   }
 
   return (
-    <VerticalTimeline className={classes.timeline}>
+    <VerticalTimeline className="styled-timeline">
       {props.elements.map((element, index) => {
         const { label, title, text, ...rest } = element;
         return (
           <VerticalTimelineElement key={index} date={label} {...rest}>
-            <Typography variant="h5" className={classes.elementTitle}>
+            <Typography variant="h5" className="styled-elementTitle">
               {title}
             </Typography>
             {text && <Typography variant="subtitle1">{text}</Typography>}

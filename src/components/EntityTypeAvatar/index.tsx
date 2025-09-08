@@ -1,13 +1,12 @@
-import { Avatar, makeStyles, Theme } from '@material-ui/core';
+import { Avatar } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import { EntityType, getEntityTypesData } from '../../types/Entity';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  avatar: {
-    width: 60,
-    height: 60
-  }
-}));
+const StyledAvatar = styled(Avatar)({
+  width: 60,
+  height: 60
+});
 
 interface Props {
   type: EntityType | 'Admin';
@@ -16,17 +15,15 @@ interface Props {
 const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 50 });
 
 const EntityTypeAvatar: React.FC<Props> = (props) => {
-  const classes = useStyles();
   const data = entityTypesData[props.type];
   return (
-    <Avatar
+    <StyledAvatar
       style={{ background: data.color }}
       alt="Company logo"
       variant="square"
-      className={classes.avatar}
     >
       {data.icon}
-    </Avatar>
+    </StyledAvatar>
   );
 };
 

@@ -1,8 +1,9 @@
-import { Chip, makeStyles, Theme } from '@material-ui/core';
+import { Chip } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 import { EntityType, getEntityTypesData } from '../../types/Entity';
 
-const useStyles = makeStyles<Theme>((theme) => ({
+const StyledComponent = styled('div')(({ theme }) => ({
   root: {
     border: '0px'
   }
@@ -16,7 +17,7 @@ interface Props {
 const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
 
 const EntityTypeChip: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  
   const data = entityTypesData[props.type];
   return (
     <Chip
@@ -24,7 +25,7 @@ const EntityTypeChip: React.FC<Props> = (props) => {
         background: data.color,
         color: 'white'
       }}
-      className={classes.root}
+      className="styled-root"
       icon={props.showIcon ? data.icon : undefined}
       label={data.label}
       variant="outlined"
