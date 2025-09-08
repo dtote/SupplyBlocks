@@ -1,12 +1,10 @@
 import {
   Button,
-  makeStyles,
-  Theme,
   Tooltip,
   useMediaQuery,
   useTheme
-} from '@material-ui/core';
-import clsx from 'clsx';
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 import React, { useCallback, useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
@@ -17,35 +15,40 @@ import { ApplicationRoutes, DashboardRoutes } from '../../routes';
 import { ErrorView } from '../Error';
 import DashboardBody from './body';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    paddingTop: 56,
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: 64
-    }
-  },
-  shiftContent: {
-    display: 'flex',
-    width: '100%',
-    paddingLeft: 240
-  },
-  content: {
-    display: 'flex',
-    width: '100%',
-    flexDirection: 'column'
-  },
-  flexGrow: {
-    flex: 1
-  },
-  signUpButton: {
-    maxWidth: 200,
-    color: 'white'
+const DashboardRoot = styled('div')(({ theme }) => ({
+  paddingTop: 56,
+  [theme.breakpoints.up('sm')]: {
+    paddingTop: 64
   }
 }));
 
+const ShiftedContent = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  paddingLeft: 240,
+  paddingTop: 56,
+  [theme.breakpoints.up('sm')]: {
+    paddingTop: 64
+  }
+}));
+
+const ContentContainer = styled('div')({
+  display: 'flex',
+  width: '100%',
+  flexDirection: 'column'
+});
+
+const FlexGrow = styled('div')({
+  flex: 1
+});
+
+const SignUpButton = styled(Button)({
+  maxWidth: 200,
+  color: 'white'
+});
+
 // TODO: fix small screens width issue
 const Dashboard: React.FC = (props) => {
-  const classes = useStyles();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'), {
     defaultMatches: true
@@ -72,7 +75,7 @@ const Dashboard: React.FC = (props) => {
     content = (
       <>
         <DashboardBody pages={DashboardRoutes} />
-        <div className={classes.flexGrow} />
+        <FlexGrow />
         <Footer background={'#FFFFFF'} />
       </>
     );
@@ -83,35 +86,31 @@ const Dashboard: React.FC = (props) => {
         errorMessage="Create an account and wait for SupplyBlocks admin approval before using dashboard"
       >
         <Tooltip title="Sign up" aria-label="sign-up">
-          <Button
-            className={classes.signUpButton}
+          <SignUpButton
             fullWidth
             variant="contained"
             onClick={clickCallback}
             color="secondary"
           >
             Sign up
-          </Button>
+          </SignUpButton>
         </Tooltip>
       </ErrorView>
     );
   }
 
+  const RootComponent = isDesktop ? ShiftedContent : DashboardRoot;
+
   return (
-    <div
-      className={clsx({
-        [classes.root]: true,
-        [classes.shiftContent]: isDesktop
-      })}
-    >
+    <RootComponent>
       <Topbar onSidebarOpen={handleSidebarOpen} />
       <Sidebar
         onClose={handleSidebarClose}
         open={shouldOpenSidebar}
         variant={isDesktop ? 'persistent' : 'temporary'}
       />
-      <div className={classes.content}>{content}</div>
-    </div>
+      <ContentContainer>{content}</ContentContainer>
+    </RootComponent>
   );
 };
 
