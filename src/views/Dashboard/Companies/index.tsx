@@ -1,4 +1,5 @@
-import { Grid, makeStyles, Theme } from '@material-ui/core';
+import { Box, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import CompanyCard from '../../../components/CompanyCard';
@@ -6,27 +7,33 @@ import Title from '../../../components/Title';
 import { GlobalContext } from '../../../contexts';
 import { Entity } from '../../../types/Entity';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  grid: {
-    margin: theme.spacing(2, 0)
-  },
-  gridItem: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'center'
+const StyledRoot = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(3),
+  paddingTop: theme.spacing(4),
+  maxWidth: 1400,
+  margin: '0 auto',
+  width: '100%',
+  minHeight: '100%'
+}));
+
+const StyledGridContainer = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+  gap: theme.spacing(3),
+  margin: theme.spacing(3, 0),
+  width: '100%',
+  [theme.breakpoints.down('sm')]: {
+    gridTemplateColumns: '1fr',
+    gap: theme.spacing(2)
   }
 }));
 
 const CompaniesList: React.FC<{
   companies: Entity[];
 }> = ({ companies }) => {
-  const classes = useStyles();
+
   const { approveEntity } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
   const { enqueueSnackbar } = useSnackbar();
@@ -49,15 +56,14 @@ const CompaniesList: React.FC<{
   );
 
   return (
-    <Grid className={classes.grid} container>
+    <StyledGridContainer>
       {companies.map((company, index) => (
-        <Grid
+        <Box
           key={index}
-          className={classes.gridItem}
-          item
-          xs={12}
-          sm={6}
-          md={4}
+          sx={{
+            display: 'flex',
+            height: 'fit-content'
+          }}
         >
           <CompanyCard
             disabled={current !== company.id && current !== ''}
@@ -65,9 +71,9 @@ const CompaniesList: React.FC<{
             onClickCallback={clickCallback(company.id)}
             {...company}
           />
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </StyledGridContainer>
   );
 };
 
@@ -78,10 +84,10 @@ const splitCompanies = (entities: Entity[]) => {
   return { pending, approved };
 };
 
-interface Props {}
+interface Props { }
 
 const CompaniesView: React.FC<Props> = (props) => {
-  const classes = useStyles();
+
   const { globalState } = useContext(GlobalContext);
   const [companies, setCompanies] = useState<Entity[]>([]);
   const [pendingCompanies, setPendingCompanies] = useState<Entity[]>([]);
@@ -98,7 +104,7 @@ const CompaniesView: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className={classes.root}>
+    <StyledRoot>
       {isAdmin && pendingCompanies.length > 0 && (
         <>
           <Title title={'Pending'} />
@@ -107,7 +113,7 @@ const CompaniesView: React.FC<Props> = (props) => {
       )}
       <Title title={'Companies'} />
       <CompaniesList companies={companies} />
-    </div>
+    </StyledRoot>
   );
 };
 

@@ -1,4 +1,5 @@
-import { Container, Grid, makeStyles, Theme } from '@material-ui/core';
+import { Box, Container, Grid } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { Formik, FormikHelpers } from 'formik';
 import { useSnackbar } from 'notistack';
 import React, { useCallback, useContext, useState } from 'react';
@@ -9,30 +10,37 @@ import { Product } from '../../../types/Product';
 import { CreateProductForm } from './Form';
 import { CreateProductFormValidationSchema } from './ValidationSchema';
 
-const useStyles = makeStyles<Theme>((theme) => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  grid: {
-    margin: theme.spacing(2, 0)
-  },
-  gridItem: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  formContainer: {
-    marginTop: theme.spacing(6)
+const StyledRoot = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  padding: theme.spacing(3),
+  paddingTop: theme.spacing(4),
+  maxWidth: 1400,
+  margin: '0 auto',
+  width: '100%',
+  minHeight: '100%'
+}));
+
+const StyledGridContainer = styled(Box)(({ theme }) => ({
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+  gap: theme.spacing(3),
+  margin: theme.spacing(2, 0),
+  width: '100%',
+  maxWidth: 1200,
+  [theme.breakpoints.down('sm')]: {
+    gridTemplateColumns: '1fr',
   }
+}));
+
+const StyledFormContainer = styled(Container)(({ theme }) => ({
+  marginTop: theme.spacing(6)
 }));
 
 const ProductsList: React.FC<{
   products: Product[];
 }> = ({ products }) => {
-  const classes = useStyles();
+
   const { purchaseProduct, prepareProduct } = useContext(GlobalContext);
   const [current, setCurrent] = useState('');
   const { enqueueSnackbar } = useSnackbar();
@@ -72,15 +80,14 @@ const ProductsList: React.FC<{
   );
 
   return (
-    <Grid className={classes.grid} container>
+    <StyledGridContainer>
       {products.map((product, index) => (
-        <Grid
+        <Box
           key={index}
-          className={classes.gridItem}
-          item
-          xs={12}
-          sm={6}
-          md={4}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}
         >
           <ProductCard
             disabled={current !== product.id && current !== ''}
@@ -89,16 +96,16 @@ const ProductsList: React.FC<{
             onPrepareCallback={prepareCallback(product.id)}
             {...product}
           />
-        </Grid>
+        </Box>
       ))}
-    </Grid>
+    </StyledGridContainer>
   );
 };
 
-interface Props {}
+interface Props { }
 
 const ProductsView: React.FC<Props> = (props) => {
-  const classes = useStyles();
+
   const { globalState, createProduct, updateProducts } = useContext(
     GlobalContext
   );
@@ -131,11 +138,11 @@ const ProductsView: React.FC<Props> = (props) => {
   }
 
   return (
-    <div className={classes.root}>
+    <StyledRoot>
       {isFactory && (
         <>
           <Title title={'Create product'} />
-          <Container maxWidth="xs" className={classes.formContainer}>
+          <StyledFormContainer maxWidth="xs">
             <Formik<CreateProductForm>
               validationSchema={CreateProductFormValidationSchema}
               initialValues={{
@@ -148,12 +155,12 @@ const ProductsView: React.FC<Props> = (props) => {
                 return <CreateProductForm {...props} />;
               }}
             </Formik>
-          </Container>
+          </StyledFormContainer>
         </>
       )}
       <Title title={'Products'} />
       <ProductsList products={globalState.products} />
-    </div>
+    </StyledRoot>
   );
 };
 
