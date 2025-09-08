@@ -1,13 +1,12 @@
 import {
   AppBar,
-  makeStyles,
-  Theme,
   Toolbar,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import React from 'react';
 
-const useStyles = makeStyles<Theme>((theme: Theme) => ({
+import { styled } from '@mui/material/styles';
+const StyledToolbar = styled('div')(({ theme }) => ({
   toolbar: {
     background: '#352f2f',
     display: 'flex',
@@ -15,13 +14,13 @@ const useStyles = makeStyles<Theme>((theme: Theme) => ({
   }
 }));
 
-interface Props {}
+interface Props { }
 
 export const WelcomeTopbar: React.FC<Props> = (props) => {
-  const classes = useStyles();
+
   return (
     <AppBar position="static">
-      <Toolbar className={classes.toolbar}>
+      <Toolbar className="styled-toolbar">
         <Typography align="center" variant="h4">
           SupplyBlocks
         </Typography>

@@ -1,80 +1,75 @@
 import {
+  Box,
   Container,
   Grid,
-  makeStyles,
-  Theme,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import React from 'react';
+import { styled } from '@mui/material/styles';
 import Timeline from '../../components/Timeline';
 import { advantages, agents, getTimelineElements, ItemData } from './data';
 
-const useStyles = makeStyles<Theme>((theme: Theme) => ({
-  advantages: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  agents: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.secondary.light
-  },
-  howDoesItWork: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column'
-  },
-  agentsTitle: {
-    color: 'white',
-    margin: theme.spacing(4, 0)
-  },
-  advantagesTitle: {
-    color: theme.palette.primary.main,
-    margin: theme.spacing(4, 0)
-  },
-  howDoesItWorkTitle: {
-    color: theme.palette.secondary.main,
-    margin: theme.spacing(4, 0)
-  },
-  agentsSentence: {
-    color: 'white',
-    marginBottom: theme.spacing(4)
-  },
-  howDoesItWorkSentence: {
-    color: theme.palette.secondary.main,
-    marginBottom: theme.spacing(4)
-  },
-  itemsGrid: {
-    margin: theme.spacing(2, 0)
-  },
-  item: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'column',
-    margin: theme.spacing(0, 6, 6)
-  },
-  itemImage: {
-    width: 126,
-    height: 126,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    margin: theme.spacing(2)
-  },
-  agentLabel: {
-    color: 'white'
-  },
-  advantageLabel: {
-    color: theme.palette.primary.main
+const AdvantagesSection = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  padding: theme.spacing(10, 2),
+  backgroundColor: '#fafafa'
+}));
+
+const AgentsSection = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  backgroundColor: theme.palette.secondary.light,
+  padding: theme.spacing(10, 2)
+}));
+
+const HowDoesItWorkSection = styled('div')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flexDirection: 'column',
+  padding: theme.spacing(10, 2),
+  backgroundColor: 'white'
+}));
+
+const SectionTitle = styled(Typography)(({ theme }) => ({
+  margin: theme.spacing(0, 0, 6),
+  fontWeight: 'bold',
+  fontSize: '2.5rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '2rem'
+  }
+}));
+
+const ItemContainer = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  textAlign: 'center',
+  padding: theme.spacing(3),
+  height: '100%',
+  minHeight: 280
+}));
+
+const ItemImage = styled('div')(({ theme }) => ({
+  width: 126,
+  height: 126,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: theme.spacing(2),
+  '& img': {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain'
   }
 }));
 
@@ -83,93 +78,133 @@ interface ItemProps extends ItemData {
 }
 
 const Item: React.FC<ItemProps> = (props) => {
-  const classes = useStyles();
   const { label, typographyClassname, src, text } = props;
   return (
-    <div className={classes.item}>
-      <div className={classes.itemImage}>
-        <img alt={text} src={src}></img>
-      </div>
-      <Typography className={typographyClassname} variant="h5" align="center">
+    <ItemContainer>
+      <ItemImage>
+        <img alt={text} src={src} />
+      </ItemImage>
+      <Typography
+        variant="h5"
+        align="center"
+        sx={{
+          mb: 2,
+          fontWeight: 'bold',
+          color: typographyClassname === 'styled-agentLabel' ? 'white' : 'primary.main',
+          fontSize: '1.3rem'
+        }}
+      >
         {label}
       </Typography>
-      {props.text && <Typography align="center">{props.text}</Typography>}
-    </div>
+      {text && (
+        <Typography
+          align="center"
+          variant="body1"
+          sx={{
+            color: typographyClassname === 'styled-agentLabel' ? 'rgba(255,255,255,0.9)' : 'text.secondary',
+            lineHeight: 1.6,
+            fontSize: '0.95rem'
+          }}
+        >
+          {text}
+        </Typography>
+      )}
+    </ItemContainer>
   );
 };
 
 export const Agents: React.FC = (props) => {
-  const classes = useStyles();
   return (
-    <div className={classes.agents}>
-      <Typography className={classes.agentsTitle} align="center" variant="h4">
+    <AgentsSection>
+      <SectionTitle align="center" variant="h3" sx={{ color: 'white' }}>
         Supply chain agents
-      </Typography>
+      </SectionTitle>
       <Container maxWidth="md">
         <Typography
-          className={classes.agentsSentence}
           align="center"
-          variant="h5"
+          variant="h6"
+          sx={{
+            color: 'white',
+            mb: 6,
+            opacity: 0.9,
+            lineHeight: 1.6
+          }}
         >
-          SuppyBlocks usage is intended to aid supply chain management for
+          SupplyBlocks usage is intended to aid supply chain management for
           different kind of companies:
         </Typography>
       </Container>
-      <Grid className={classes.itemsGrid} container>
-        {agents.map((agent, index) => (
-          <Grid key={index} item xs={12} sm={6} lg={3}>
-            <Item typographyClassname={classes.agentLabel} {...agent} />
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+      <Container maxWidth="lg">
+        <Box sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(2, 1fr)",
+            lg: "repeat(4, 1fr)"
+          },
+          gap: 4,
+          justifyItems: "stretch",
+          width: '100%'
+        }}>
+          {agents.map((agent, index) => (
+            <Item key={index} typographyClassname="styled-agentLabel" {...agent} />
+          ))}
+        </Box>
+      </Container>
+    </AgentsSection>
   );
 };
 
 export const Advantages: React.FC = (props) => {
-  const classes = useStyles();
   return (
-    <div className={classes.advantages}>
-      <Typography
-        className={classes.advantagesTitle}
-        align="center"
-        variant="h4"
-      >
+    <AdvantagesSection>
+      <SectionTitle align="center" variant="h3" sx={{ color: 'primary.main' }}>
         Advantages
-      </Typography>
-      <Grid className={classes.itemsGrid} container>
-        {advantages.map((agent, index) => (
-          <Grid key={index} item xs={12} sm={6} lg={4}>
-            <Item typographyClassname={classes.advantageLabel} {...agent} />
-          </Grid>
-        ))}
-      </Grid>
-    </div>
+      </SectionTitle>
+      <Container maxWidth="lg">
+        <Box sx={{
+          display: "grid",
+          gridTemplateColumns: {
+            xs: "1fr",
+            sm: "repeat(2, 1fr)",
+            lg: "repeat(3, 1fr)"
+          },
+          gap: 6,
+          justifyItems: "stretch",
+          width: '100%'
+        }}>
+          {advantages.map((advantage, index) => (
+            <Item key={index} typographyClassname="styled-advantageLabel" {...advantage} />
+          ))}
+        </Box>
+      </Container>
+    </AdvantagesSection>
   );
 };
 
 export const HowDoesItWork: React.FC = (props) => {
-  const classes = useStyles();
   return (
-    <div className={classes.howDoesItWork}>
-      <Typography
-        className={classes.howDoesItWorkTitle}
-        align="center"
-        variant="h4"
-      >
+    <HowDoesItWorkSection>
+      <SectionTitle align="center" variant="h3" sx={{ color: 'secondary.main' }}>
         How does it work?
-      </Typography>
+      </SectionTitle>
       <Container maxWidth="md">
         <Typography
-          className={classes.howDoesItWorkSentence}
           align="center"
-          variant="h5"
+          variant="h6"
+          sx={{
+            color: 'secondary.main',
+            mb: 6,
+            lineHeight: 1.6
+          }}
         >
           The following timeline briefly illustrates how SupplyBlocks works.
           Every action described is timestamped and added to the blockchain:
         </Typography>
       </Container>
-      <Timeline elements={getTimelineElements()} />
-    </div>
+      <Container maxWidth="lg">
+        <Timeline elements={getTimelineElements()} />
+      </Container>
+    </HowDoesItWorkSection>
   );
 };
