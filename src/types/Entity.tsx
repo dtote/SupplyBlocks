@@ -1,9 +1,9 @@
-import BuildIcon from '@material-ui/icons/Build';
-import ErrorIcon from '@material-ui/icons/Error';
-import HomeWorkIcon from '@material-ui/icons/HomeWork';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import StarIcon from '@material-ui/icons/Star';
-import StoreIcon from '@material-ui/icons/Store';
+import BuildIcon from '@mui/icons-material/Build';
+import ErrorIcon from '@mui/icons-material/Error';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import StarIcon from '@mui/icons-material/Star';
+import StoreIcon from '@mui/icons-material/Store';
 import React from 'react';
 
 export type Address = string;
@@ -80,8 +80,8 @@ export interface EntityTypeData {
 export const getEntityTypesData = (
   style: React.CSSProperties
 ): {
-  [key in EntityType | 'Admin']: EntityTypeData;
-} => {
+    [key in EntityType | 'Admin']: EntityTypeData;
+  } => {
   return {
     Admin: {
       icon: <StarIcon style={style} />,

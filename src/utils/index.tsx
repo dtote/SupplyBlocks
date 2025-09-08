@@ -1,5 +1,6 @@
-import { makeStyles, Theme, Typography } from '@material-ui/core';
-import FingerprintIcon from '@material-ui/icons/Fingerprint';
+import { Theme, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import { OptionsObject } from 'notistack';
 import React from 'react';
 import { TimelineElement } from '../components/Timeline';
@@ -16,13 +17,9 @@ import {
 } from '../types';
 
 export const customColorStyles = (color: string) => {
-  const customUseStyles = makeStyles(() => ({
-    customColor: {
-      color: color
-    }
-  }));
-  const customClasses = customUseStyles();
-  return customClasses;
+  return {
+    customColor: color
+  };
 };
 
 export const convertEntity = (obj: any): Entity => ({
@@ -103,9 +100,9 @@ export const getRoute = (
   const selectedWarehousingEntities: Entity[] =
     transportSteps > 1
       ? getNRandom(
-          entities.filter((entity) => entity.type === 'Warehouse'),
-          warehouseSteps
-        )
+        entities.filter((entity) => entity.type === 'Warehouse'),
+        warehouseSteps
+      )
       : [];
 
   const route: Address[] = [];

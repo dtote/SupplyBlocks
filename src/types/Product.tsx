@@ -1,8 +1,8 @@
-import AllInboxIcon from '@material-ui/icons/AllInbox';
-import BuildIcon from '@material-ui/icons/Build';
-import HomeWorkIcon from '@material-ui/icons/HomeWork';
-import LocalShippingIcon from '@material-ui/icons/LocalShipping';
-import StoreIcon from '@material-ui/icons/Store';
+import AllInboxIcon from '@mui/icons-material/AllInbox';
+import BuildIcon from '@mui/icons-material/Build';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import StoreIcon from '@mui/icons-material/Store';
 import React from 'react';
 import { Address } from './Entity';
 
@@ -45,8 +45,8 @@ export const getProductState = (id: number): ProductState => {
 export const getProductStatesData = (
   style: React.CSSProperties
 ): {
-  [key in ProductState]: ProductStateData;
-} => {
+    [key in ProductState]: ProductStateData;
+  } => {
   return {
     Created: {
       icon: <BuildIcon style={style} />,
