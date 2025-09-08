@@ -4,6 +4,30 @@
 
 SupplyBlocks permite a diferentes entidades (fábricas, transportistas, almacenes, minoristas) gestionar productos y entregas de forma descentralizada usando contratos inteligentes en Ethereum.
 
+## 🚀 **ACTUALIZACIONES TECNOLÓGICAS (2024)**
+
+Esta aplicación ha sido completamente actualizada con las tecnologías más recientes:
+
+### **Frontend Modernizado:**
+- ✅ **React 18.3.1** - API moderna con createRoot
+- ✅ **Material-UI v5 (@mui/material 7.3.2)** - Componentes actualizados
+- ✅ **notistack v3.0.2** - Sistema de notificaciones moderno
+- ✅ **formik-mui** - Formularios compatibles con MUI v5
+- ✅ **Styled Components API v5** - Estilos modernos
+- ✅ **Grid2** - Sistema de layout actualizado de MUI v5
+
+### **Mejoras Implementadas:**
+- ✅ **Migración completa de makeStyles a styled components**
+- ✅ **Eliminación de advertencias de deprecación**
+- ✅ **Compatibilidad total con React 18**
+- ✅ **Grid System actualizado con props `item` correctas**
+- ✅ **ListItem `button` prop migrado a `component="div"`**
+- ✅ **Hidden component reemplazado por useMediaQuery**
+- ✅ **Optimización de rendimiento**
+- ✅ **Corrección de errores de tipado TypeScript**
+- ✅ **Sintaxis de importación ES6 moderna**
+- ✅ **Compatibilidad 100% con MUI v5**
+
 ---
 
 ## 📋 **PRERREQUISITOS**
