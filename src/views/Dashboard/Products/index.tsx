@@ -15,21 +15,39 @@ const StyledRoot = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   padding: theme.spacing(3),
   paddingTop: theme.spacing(4),
-  maxWidth: 1400,
+  maxWidth: 1600,
   margin: '0 auto',
   width: '100%',
-  minHeight: '100%'
+  minHeight: '100%',
+  [theme.breakpoints.down('md')]: {
+    maxWidth: '100%',
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(3)
+  }
 }));
 
 const StyledGridContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
   gap: theme.spacing(3),
-  margin: theme.spacing(2, 0),
+  margin: theme.spacing(3, 0, 0),
   width: '100%',
-  maxWidth: 1200,
+  maxWidth: 1000,
+  justifyContent: 'flex-start',
+  [theme.breakpoints.down('lg')]: {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+    gap: theme.spacing(2.5),
+    maxWidth: 800
+  },
+  [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: theme.spacing(2),
+    maxWidth: 700
+  },
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: '1fr',
+    gap: theme.spacing(2),
+    maxWidth: '100%'
   }
 }));
 
@@ -70,7 +88,8 @@ const ProductsList: React.FC<{
           .then(() => {
             enqueueSnackbar('Prepared', { variant: 'success' });
           })
-          .catch(() => {
+          .catch((error: any) => {
+            console.log(error);
             enqueueSnackbar('Error', { variant: 'error' });
           })
           .finally(() => setCurrent(''));
@@ -86,7 +105,7 @@ const ProductsList: React.FC<{
           key={index}
           sx={{
             display: 'flex',
-            justifyContent: 'center'
+            height: '300px'
           }}
         >
           <ProductCard

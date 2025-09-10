@@ -12,21 +12,39 @@ const StyledRoot = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   padding: theme.spacing(3),
   paddingTop: theme.spacing(4),
-  maxWidth: 1400,
+  maxWidth: 1600,
   margin: '0 auto',
   width: '100%',
-  minHeight: '100%'
+  minHeight: '100%',
+  [theme.breakpoints.down('md')]: {
+    maxWidth: '100%',
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(3)
+  }
 }));
 
 const StyledGridContainer = styled(Box)(({ theme }) => ({
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
   gap: theme.spacing(3),
-  margin: theme.spacing(3, 0),
+  margin: theme.spacing(3, 0, 0),
   width: '100%',
+  maxWidth: 1000,
+  justifyContent: 'flex-start',
+  [theme.breakpoints.down('lg')]: {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+    gap: theme.spacing(2.5),
+    maxWidth: 800
+  },
+  [theme.breakpoints.down('md')]: {
+    gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+    gap: theme.spacing(2),
+    maxWidth: 700
+  },
   [theme.breakpoints.down('sm')]: {
     gridTemplateColumns: '1fr',
-    gap: theme.spacing(2)
+    gap: theme.spacing(2),
+    maxWidth: '100%'
   }
 }));
 
@@ -62,7 +80,7 @@ const CompaniesList: React.FC<{
           key={index}
           sx={{
             display: 'flex',
-            height: 'fit-content'
+            height: '280px'
           }}
         >
           <CompanyCard

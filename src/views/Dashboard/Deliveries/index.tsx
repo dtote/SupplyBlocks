@@ -12,19 +12,28 @@ const StyledRoot = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   padding: theme.spacing(3),
   paddingTop: theme.spacing(4),
-  maxWidth: 1400,
+  maxWidth: 1600,
   margin: '0 auto',
   width: '100%',
-  minHeight: '100%'
+  minHeight: '100%',
+  [theme.breakpoints.down('md')]: {
+    maxWidth: '100%',
+    padding: theme.spacing(2),
+    paddingTop: theme.spacing(3)
+  }
 }));
 
 const StyledDeliveriesContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  gap: theme.spacing(2),
-  margin: theme.spacing(2, 0),
+  gap: theme.spacing(3),
+  margin: theme.spacing(3, 0),
   width: '100%',
-  maxWidth: 1200
+  alignItems: 'center',
+  [theme.breakpoints.down('md')]: {
+    gap: theme.spacing(2),
+    margin: theme.spacing(2, 0)
+  }
 }));
 
 const DeliveriesList: React.FC<{
@@ -53,28 +62,28 @@ const DeliveriesList: React.FC<{
   );
 
   return (
-    <Container maxWidth="lg">
-      <StyledDeliveriesContainer>
-        {deliveries
-          .filter((delivery) => delivery.purchaserID !== defaultAddress)
-          .map((delivery, index) => (
-            <Box
-              key={index}
-              sx={{
-                display: 'flex',
-                justifyContent: 'center'
-              }}
-            >
-              <DeliveryCard
-                disabled={current !== delivery.id && current !== ''}
-                transacting={current === delivery.id}
-                onTimestampCallback={timestampCallback(delivery.id)}
-                {...delivery}
-              />
-            </Box>
-          ))}
-      </StyledDeliveriesContainer>
-    </Container>
+    <StyledDeliveriesContainer>
+      {deliveries
+        .filter((delivery) => delivery.purchaserID !== defaultAddress)
+        .map((delivery, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: '100%',
+              maxWidth: 800
+            }}
+          >
+            <DeliveryCard
+              disabled={current !== delivery.id && current !== ''}
+              transacting={current === delivery.id}
+              onTimestampCallback={timestampCallback(delivery.id)}
+              {...delivery}
+            />
+          </Box>
+        ))}
+    </StyledDeliveriesContainer>
   );
 };
 
