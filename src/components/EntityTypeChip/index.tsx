@@ -17,13 +17,27 @@ interface Props {
 const entityTypesData = getEntityTypesData({ color: 'white', fontSize: 25 });
 
 const EntityTypeChip: React.FC<Props> = (props) => {
-  
+
   const data = entityTypesData[props.type];
   return (
     <Chip
-      style={{
+      sx={{
         background: data.color,
-        color: 'white'
+        color: 'white',
+        fontSize: '0.75rem',
+        height: 'auto',
+        minHeight: 24,
+        '& .MuiChip-label': {
+          px: 1.5,
+          py: 0.5,
+          fontSize: '0.75rem',
+          fontWeight: 500,
+          whiteSpace: 'nowrap'
+        },
+        '& .MuiChip-icon': {
+          fontSize: '1rem',
+          ml: 0.5
+        }
       }}
       className="styled-root"
       icon={props.showIcon ? data.icon : undefined}
