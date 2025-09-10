@@ -17,6 +17,9 @@ import DashboardBody from './body';
 
 const DashboardRoot = styled('div')(({ theme }) => ({
   paddingTop: 56,
+  minHeight: '100vh',
+  display: 'flex',
+  flexDirection: 'column',
   [theme.breakpoints.up('sm')]: {
     paddingTop: 64
   }
@@ -27,6 +30,8 @@ const ShiftedContent = styled('div')(({ theme }) => ({
   width: '100%',
   paddingLeft: 240,
   paddingTop: 56,
+  minHeight: '100vh',
+  flexDirection: 'column',
   [theme.breakpoints.up('sm')]: {
     paddingTop: 64
   }
@@ -35,7 +40,8 @@ const ShiftedContent = styled('div')(({ theme }) => ({
 const ContentContainer = styled('div')({
   display: 'flex',
   width: '100%',
-  flexDirection: 'column'
+  flexDirection: 'column',
+  flex: 1
 });
 
 const FlexGrow = styled('div')({
