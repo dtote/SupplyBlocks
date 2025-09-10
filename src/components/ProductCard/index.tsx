@@ -28,9 +28,9 @@ interface InfoItemProps {
 
 export const InfoItem: React.FC<InfoItemProps> = (props) => {
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      alignItems: 'center', 
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'center',
       mb: 1,
       '& .MuiSvgIcon-root': {
         mr: 1
@@ -39,9 +39,9 @@ export const InfoItem: React.FC<InfoItemProps> = (props) => {
       <Box component="span" sx={{ display: 'flex', alignItems: 'center' }}>
         {props.icon}
       </Box>
-      <Typography 
-        className={props.textClassName} 
-        noWrap 
+      <Typography
+        className={props.textClassName}
+        noWrap
         sx={{ fontSize: props.textClassName === 'styled-address' ? 10 : 'inherit' }}
       >
         {props.text}
@@ -59,8 +59,8 @@ interface CardButtonProps {
 
 const CardButton: React.FC<CardButtonProps> = (props) => {
   return (
-    <Box sx={{ 
-      margin: theme => theme.spacing(3, 0, 2), 
+    <Box sx={{
+      margin: theme => theme.spacing(3, 0, 2),
       position: 'relative',
       display: 'flex',
       justifyContent: 'center'
@@ -79,8 +79,8 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
         </div>
       </Tooltip>
       {props.transacting && (
-        <CircularProgress 
-          size={24} 
+        <CircularProgress
+          size={24}
           sx={{
             color: theme => theme.palette.secondary.main,
             position: 'absolute',
@@ -123,26 +123,36 @@ const ProductCard: React.FC<Props> = (props) => {
   const [deliveryTimestamp] = deliveryTimestamps.slice(-1);
 
   return (
-    <Card sx={{ 
-      padding: 2, 
-      maxWidth: 400, 
+    <Card sx={{
+      padding: 2,
+      maxWidth: 400,
       width: '100%',
       height: '100%',
       display: 'flex',
       flexDirection: 'column'
     }}>
-      <CardContent sx={{ 
-        padding: 0, 
-        '&:last-child': { paddingBottom: 0 },
-        flex: 1
+      <CardContent sx={{
+        padding: theme => theme.spacing(3),
+        '&:last-child': { paddingBottom: theme => theme.spacing(3) },
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h5" noWrap>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3, gap: 1 }}>
+          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                wordBreak: 'break-word',
+                lineHeight: 1.2,
+                mb: 0.5
+              }}
+            >
               {name}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Box sx={{ flexShrink: 0 }}>
             <ProductStateChip state={state} showIcon />
           </Box>
         </Box>
@@ -196,7 +206,7 @@ const ProductCard: React.FC<Props> = (props) => {
           />
         </CardActions>
       )}
-      {state === 'Created' && !purchased && isFactory && (
+      {state === 'Created' && purchased && isFactory && (
         <CardActions sx={{ justifyContent: 'center', padding: 0 }}>
           <CardButton
             text="Prepare"

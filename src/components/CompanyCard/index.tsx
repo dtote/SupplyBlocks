@@ -27,21 +27,28 @@ interface InfoItemProps {
 
 const InfoItem: React.FC<InfoItemProps> = (props) => {
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      mb: 1,
+    <Box sx={{
+      display: 'flex',
+      alignItems: 'flex-start',
+      mb: 1.5,
+      gap: 1,
       '& .MuiSvgIcon-root': {
-        mr: 1
+        flexShrink: 0,
+        mt: 0.1
       }
     }}>
       <Box component="span" sx={{ display: 'flex', alignItems: 'center' }}>
         {props.icon}
       </Box>
-      <Typography 
-        className={props.textClassName} 
-        noWrap 
-        sx={{ fontSize: props.textClassName === 'styled-address' ? 10 : 'inherit' }}
+      <Typography
+        className={props.textClassName}
+        sx={{
+          fontSize: props.textClassName === 'styled-address' ? '0.75rem' : 'inherit',
+          wordBreak: 'break-all',
+          lineHeight: 1.3,
+          minWidth: 0,
+          flex: 1
+        }}
       >
         {props.text}
       </Typography>
@@ -57,8 +64,8 @@ interface CardButtonProps {
 
 const CardButton: React.FC<CardButtonProps> = (props) => {
   return (
-    <Box sx={{ 
-      margin: theme => theme.spacing(3, 0, 2), 
+    <Box sx={{
+      margin: theme => theme.spacing(3, 0, 2),
       position: 'relative',
       display: 'flex',
       justifyContent: 'center'
@@ -77,8 +84,8 @@ const CardButton: React.FC<CardButtonProps> = (props) => {
         </div>
       </Tooltip>
       {props.transacting && (
-        <CircularProgress 
-          size={24} 
+        <CircularProgress
+          size={24}
           sx={{
             color: theme => theme.palette.secondary.main,
             position: 'absolute',
@@ -111,7 +118,8 @@ const CompanyCard: React.FC<Props> = (props) => {
   } = props;
 
   return (
-    <Card sx={{ 
+    <Card sx={{
+      width: '100%',
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
@@ -121,27 +129,30 @@ const CompanyCard: React.FC<Props> = (props) => {
         boxShadow: 4
       }
     }}>
-      <CardContent sx={{ 
-        p: 3,
-        '&:last-child': { pb: 3 },
+      <CardContent sx={{
+        p: 2.5,
+        '&:last-child': { pb: 2.5 },
         flex: 1,
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        overflow: 'hidden',
+        minHeight: 0
       }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Box sx={{ flexGrow: 1 }}>
+        <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3, gap: 1 }}>
+          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Typography
               variant="h5"
-              noWrap
-              className={
-                customColorStyles(getEntityTypesData({})[type].color)
-                  .customColor
-              }
+              sx={{
+                wordBreak: 'break-word',
+                lineHeight: 1.2,
+                mb: 0.5,
+                ...customColorStyles(getEntityTypesData({})[type].color)
+              }}
             >
               {name}
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Box sx={{ flexShrink: 0 }}>
             <EntityTypeChip type={type} showIcon />
           </Box>
         </Box>
@@ -159,15 +170,21 @@ const CompanyCard: React.FC<Props> = (props) => {
           icon={<PhoneIcon className="styled-icon" color="primary" />}
         />
       </CardContent>
-      {!approved && (
-        <CardActions sx={{ justifyContent: 'center', padding: 0 }}>
+      <CardActions sx={{
+        justifyContent: 'center',
+        padding: approved ? theme => theme.spacing(1.5) : 0,
+        minHeight: 60,
+        display: 'flex',
+        alignItems: 'center'
+      }}>
+        {!approved ? (
           <CardButton
             onClickCallback={onClickCallback}
             transacting={props.transacting}
             disabled={props.disabled}
           />
-        </CardActions>
-      )}
+        ) : null}
+      </CardActions>
     </Card>
   );
 };
