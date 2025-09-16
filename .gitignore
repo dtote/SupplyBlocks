@@ -59,4 +59,7 @@ blockchain/history
 src/types/generated
 migrations/*.js
 
+### Ganache Database ###
+ganache-db/
+
 # End of https://www.gitignore.io/api/react,soliditytruffle,visualstudiocode
