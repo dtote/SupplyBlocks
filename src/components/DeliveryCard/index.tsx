@@ -120,7 +120,6 @@ interface Props extends Product {
 }
 
 const DeliveryCard: React.FC<Props> = (props) => {
-  const theme = useTheme();
   const {
     id,
     name,
@@ -144,7 +143,7 @@ const DeliveryCard: React.FC<Props> = (props) => {
       throw new Error('Something is wrong');
     }
     return filtered[0];
-  }, globalState.products);
+  }, [globalState.products]);
 
   const nextEntity = deliveryEntities[deliveryStep] === globalState.account;
   const isFactory = globalState.entity.type === 'Factory';

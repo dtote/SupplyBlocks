@@ -1,4 +1,4 @@
-import { Theme, Typography  } from '@mui/material';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import React from 'react';
 import {
@@ -8,7 +8,8 @@ import {
 } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 
-const StyledTimeline = styled('div')(({ theme }) => ({timeline: {
+const StyledTimeline = styled('div')(({ theme }) => ({
+  timeline: {
     margin: theme.spacing(6, 0),
     '&::before': {
       background: 'black'
@@ -28,7 +29,8 @@ const StyledTimeline = styled('div')(({ theme }) => ({timeline: {
   },
   elementTitle: {
     marginBottom: theme.spacing(2)
-  }}));
+  }
+}));
 
 export interface TimelineElement
   extends Omit<VerticalTimelineElementProps, 'date'> {
@@ -44,27 +46,29 @@ interface Props {
 }
 
 export const Timeline: React.FC<Props> = (props) => {
-  
+
 
   if (props.elements.length === 0) {
     return props.emptyElements ? props.emptyElements : <></>;
   }
 
   return (
-    <VerticalTimeline className="styled-timeline">
-      {props.elements.map((element, index) => {
-        const { label, title, text, ...rest } = element;
-        return (
-          <VerticalTimelineElement key={index} date={label} {...rest}>
-            <Typography variant="h5" className="styled-elementTitle">
-              {title}
-            </Typography>
-            {text && <Typography variant="subtitle1">{text}</Typography>}
-            {element.body}
-          </VerticalTimelineElement>
-        );
-      })}
-    </VerticalTimeline>
+    <StyledTimeline>
+      <VerticalTimeline className="timeline">
+        {props.elements.map((element, index) => {
+          const { label, title, text, ...rest } = element;
+          return (
+            <VerticalTimelineElement key={index} date={label} {...rest}>
+              <Typography variant="h5" className="elementTitle">
+                {title}
+              </Typography>
+              {text && <Typography variant="subtitle1">{text}</Typography>}
+              {element.body}
+            </VerticalTimelineElement>
+          );
+        })}
+      </VerticalTimeline>
+    </StyledTimeline>
   );
 };
 
