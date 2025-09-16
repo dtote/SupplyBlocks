@@ -42,19 +42,21 @@ export const JoinButton: React.FC<Props> = (props) => {
   }, [globalState.entity]);
 
   return (
-    <Container maxWidth="xs" className="styled-root">
-      <Tooltip title={text} aria-label={text}>
-        <Button
-          className="styled-button"
-          fullWidth
-          variant="contained"
-          color="secondary"
-          onClick={clickCallback}
-        >
-          {text}
-        </Button>
-      </Tooltip>
-    </Container>
+    <StyledRoot>
+      <Container maxWidth="xs" className="root">
+        <Tooltip title={text} aria-label={text}>
+          <Button
+            className="button"
+            fullWidth
+            variant="contained"
+            color="secondary"
+            onClick={clickCallback}
+          >
+            {text}
+          </Button>
+        </Tooltip>
+      </Container>
+    </StyledRoot>
   );
 };
 
