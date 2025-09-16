@@ -1,6 +1,6 @@
 import {
+  Box,
   Button,
-  Container,
   Tooltip,
   Typography
 } from '@mui/material';
@@ -16,38 +16,28 @@ import { EntityType } from '../../types/Entity';
 import { SignUpForm, SignUpFormFields } from './Form';
 import { SignUpFormValidationSchema } from './ValidationSchema';
 
-const StyledRoot = styled('div')(({ theme }) => ({
-  root: {
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center'
-  },
-  paper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  name: {
-    fontSize: 34,
-    color: theme.palette.secondary.main
-  },
-  title: {
-    margin: theme.spacing(2)
-  },
-  message: {
-    marginBottom: theme.spacing(4),
-    color: theme.palette.secondary.main
-  },
-  cancelButton: {
-    maxWidth: 200,
-    background: '#ef6666',
-    color: 'white',
-    '&:hover': {
-      background: '#d85d5d'
-    }
+
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+  fontSize: 34,
+  color: theme.palette.secondary.main,
+  margin: theme.spacing(2)
+}));
+
+const StyledMessage = styled(Typography)(({ theme }) => ({
+  marginBottom: theme.spacing(4),
+  color: theme.palette.secondary.main
+}));
+
+const StyledCancelButton = styled(Button)(({ theme }) => ({
+  maxWidth: 200,
+  background: '#ef6666',
+  color: 'white',
+  '&:hover': {
+    background: '#d85d5d'
   }
 }));
+
 
 interface Props { }
 
@@ -89,29 +79,53 @@ export const SignUpView: React.FC<Props> = (props) => {
   }, [globalState.entity]);
 
   return (
-    <Container className="styled-root" component="main" maxWidth="sm">
-      <div className="styled-paper">
+    <Box
+      sx={{
+        minHeight: '100vh',
+        width: '100vw',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 2,
+        margin: 0,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          maxWidth: '600px',
+          width: '100%',
+          margin: '0 auto'
+        }}
+      >
         <Logo width={260} smallDevicesWidth={260} />
         <Typography
-          className="styled-title"
           component="h1"
           variant="h4"
           align="center"
         >
           Send a petition for joining{' '}
-          <Typography className="styled-name" display="inline">
+          <StyledTypography display="inline">
             SupplyBlocks
-          </Typography>
+          </StyledTypography>
         </Typography>
         {pending && (
-          <Typography className="styled-message" variant="h6" align="center">
+          <StyledMessage variant="h6" align="center">
             Your petition is being studied
-          </Typography>
+          </StyledMessage>
         )}
         {alreadyRegistered && (
-          <Typography className="styled-message" variant="h6" align="center">
+          <StyledMessage variant="h6" align="center">
             Already registered
-          </Typography>
+          </StyledMessage>
         )}
         <Formik<SignUpFormFields>
           validationSchema={SignUpFormValidationSchema}
@@ -132,8 +146,7 @@ export const SignUpView: React.FC<Props> = (props) => {
           }}
         </Formik>
         <Tooltip title="Cancel" aria-label="cancel">
-          <Button
-            className="styled-cancelButton"
+          <StyledCancelButton
             fullWidth
             variant="contained"
             onClick={useCallback(() => {
@@ -141,10 +154,10 @@ export const SignUpView: React.FC<Props> = (props) => {
             }, [history])}
           >
             Cancel
-          </Button>
+          </StyledCancelButton>
         </Tooltip>
-      </div>
-    </Container>
+      </Box>
+    </Box>
   );
 };
 
