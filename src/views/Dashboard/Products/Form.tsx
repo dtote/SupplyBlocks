@@ -2,7 +2,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  Grid,
   Tooltip
 } from '@mui/material';
 import { Field, FormikProps } from 'formik';
@@ -17,7 +16,7 @@ export interface CreateProductForm {
 
 interface Props extends FormikProps<CreateProductForm> { }
 
-export const CreateProductForm: React.FC<Props> = (props) => {
+export const CreateProductFormComponent: React.FC<Props> = (props) => {
 
   const { submitForm, isSubmitting, isValid } = props;
 
@@ -39,8 +38,8 @@ export const CreateProductForm: React.FC<Props> = (props) => {
           name="name"
         />
       </Box>
-      <Box sx={{ 
-        margin: theme => theme.spacing(3, 0, 2), 
+      <Box sx={{
+        margin: theme => theme.spacing(3, 0, 2),
         position: 'relative',
         display: 'flex',
         justifyContent: 'center'
@@ -61,8 +60,8 @@ export const CreateProductForm: React.FC<Props> = (props) => {
           </div>
         </Tooltip>
         {isSubmitting && (
-          <CircularProgress 
-            size={24} 
+          <CircularProgress
+            size={24}
             sx={{
               color: theme => theme.palette.secondary.main,
               position: 'absolute',
