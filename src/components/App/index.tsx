@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   ThemeProvider
 } from '@mui/material';
@@ -19,10 +20,27 @@ const AppContainer = styled('div')({
   height: '100%'
 });
 
-const StyledButton = styled(Button)({
-  maxWidth: 200,
-  color: 'white'
-});
+const StyledButton = styled(Button)(({ theme }) => ({
+  minWidth: 250,
+  height: 48,
+  borderRadius: 12,
+  textTransform: 'uppercase',
+  fontWeight: 600,
+  fontSize: '0.875rem',
+  letterSpacing: '0.5px',
+  color: 'white',
+  whiteSpace: 'nowrap',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  '&:hover': {
+    transform: 'translateY(-2px)',
+    boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)'
+  },
+  '&:active': {
+    transform: 'translateY(0px)',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)'
+  }
+}));
 
 const theme = createTheme({
   palette: {
@@ -139,13 +157,13 @@ export const App: React.FC<Props> = (props) => {
   }, []);
 
   const checkMetamask = useCallback(
-    CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError, setCircuitBreakerError),
-    []
+    () => CheckMetamask(setIsMetamaskEnabled, setWeb3ProviderError, setCircuitBreakerError)(),
+    [setIsMetamaskEnabled, setWeb3ProviderError, setCircuitBreakerError]
   );
 
   const checkConnection = useCallback(
-    CheckConnection(web3, setConnectionError),
-    [web3]
+    () => CheckConnection(web3, setConnectionError)(),
+    [web3, setConnectionError]
   );
   useInterval(checkConnection, 3000);
   useInterval(checkMetamask, 3000);
@@ -240,21 +258,24 @@ export const App: React.FC<Props> = (props) => {
         errorName="Connection"
         errorMessage="Start Ganache and configure Metamask network"
       >
-        <StyledButton
-          color="secondary"
-          variant="contained"
-          onClick={reconnectToGanache}
-          style={{ marginRight: '10px' }}
-        >
-          Reconectar Ganache
-        </StyledButton>
-        <StyledButton
-          color="primary"
-          variant="contained"
-          onClick={() => window.location.reload()}
-        >
-          Recargar Página
-        </StyledButton>
+        <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column', alignItems: 'center' }}>
+          <StyledButton
+            color="secondary"
+            variant="contained"
+            onClick={reconnectToGanache}
+            fullWidth
+          >
+            Reconectar Ganache
+          </StyledButton>
+          <StyledButton
+            color="primary"
+            variant="contained"
+            onClick={() => window.location.reload()}
+            fullWidth
+          >
+            Recargar Página
+          </StyledButton>
+        </Box>
       </ErrorView>
     );
   }
