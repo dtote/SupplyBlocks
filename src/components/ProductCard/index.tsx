@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import EventIcon from '@mui/icons-material/Event';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import { styled } from '@mui/material/styles';
 import React, { useContext } from 'react';
 import { GlobalContext } from '../../contexts';
 import { defaultAddress, getEntityTypesData } from '../../types';

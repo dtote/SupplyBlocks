@@ -11,7 +11,6 @@ import {
 import EmailIcon from '@mui/icons-material/Email';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { styled } from '@mui/material/styles';
 import React from 'react';
 import { Entity, getEntityTypesData } from '../../types/Entity';
 import { customColorStyles } from '../../utils';

@@ -1,5 +1,4 @@
 import { Theme, Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import { OptionsObject } from 'notistack';
 import React from 'react';

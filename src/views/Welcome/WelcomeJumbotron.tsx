@@ -1,5 +1,4 @@
 import {
-  Theme,
   Typography,
   useMediaQuery,
   useTheme

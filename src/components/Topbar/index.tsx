@@ -8,7 +8,6 @@ import {
   useTheme
 } from '@mui/material';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import React, { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
