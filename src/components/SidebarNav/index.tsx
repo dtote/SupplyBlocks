@@ -12,6 +12,7 @@ import { useHistory } from 'react-router-dom';
 import {
   ApplicationRoutes,
   DashboardRoutes,
+  dashboardRoutes,
   ExtendedRoute
 } from '../../routes';
 
@@ -51,15 +52,15 @@ interface Props {
 const SidebarNav: React.FC<Props> = (props) => {
   const { pages } = props;
 
-  let history = useHistory();
+  const history = useHistory();
   const [active, setActive] = useState(history.location.pathname);
 
   useEffect(() => {
     if (active === ApplicationRoutes.dashboard.path) {
-      setActive(DashboardRoutes.companies.path);
-      history.push(DashboardRoutes.companies.path);
+      setActive(dashboardRoutes.companies.path);
+      history.push(dashboardRoutes.companies.path);
     }
-  }, []);
+  }, [active, history]);
 
   const clickCallback = useCallback(
     (page: ExtendedRoute) => (

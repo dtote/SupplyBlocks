@@ -11,7 +11,7 @@ import Footer from '../../components/Footer/Footer';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
 import { GlobalContext } from '../../contexts';
-import { ApplicationRoutes, DashboardRoutes } from '../../routes';
+import { ApplicationRoutes, dashboardRoutes } from '../../routes';
 import { ErrorView } from '../Error';
 import DashboardBody from './body';
 
@@ -80,7 +80,7 @@ const Dashboard: React.FC = (props) => {
   if (globalState.entity.approved) {
     content = (
       <>
-        <DashboardBody pages={DashboardRoutes} />
+        <DashboardBody pages={dashboardRoutes} />
         <FlexGrow />
         <Footer background={'#FFFFFF'} />
       </>

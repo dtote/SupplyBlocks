@@ -34,7 +34,7 @@ export interface DashboardRoutes {
   companies: ExtendedRoute;
 }
 
-export const DashboardRoutes: DashboardRoutes = {
+export const dashboardRoutes: DashboardRoutes = {
   companies: {
     label: 'Companies',
     exact: true,

@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { DashboardRoutes } from '../../routes';
+import { dashboardRoutes } from '../../routes';
 import Profile from '../Profile';
 import SidebarNav from '../SidebarNav';
 
@@ -50,7 +50,7 @@ const Sidebar: React.FC<Props> = (props) => {
       <DrawerContent>
         <Profile />
         <StyledDivider />
-        <SidebarNav pages={DashboardRoutes} />
+        <SidebarNav pages={dashboardRoutes} />
       </DrawerContent>
     </StyledDrawer>
   );
