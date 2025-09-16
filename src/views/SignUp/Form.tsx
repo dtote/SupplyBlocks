@@ -4,7 +4,6 @@ import {
   CircularProgress,
   FormControl,
   FormControlLabel,
-  Grid,
   InputLabel,
   MenuItem,
   Tooltip
@@ -29,7 +28,7 @@ interface Props extends FormikProps<SignUpFormFields> {
 }
 
 export const SignUpForm: React.FC<Props> = (props) => {
-  
+
   const { submitForm, isSubmitting, isValid } = props;
 
   return (
@@ -80,29 +79,34 @@ export const SignUpForm: React.FC<Props> = (props) => {
             />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <FormControl variant="outlined" className="styled-selectField" fullWidth>
-            <InputLabel>Company type</InputLabel>
-            <Field
-              disabled={props.disabled}
-              component={Select}
-              variant="outlined"
-              color="secondary"
-              required
-              fullWidth
-              id="type"
-              label="Company type"
-              name="type"
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {visibleEntityTypes.map((type, index) => (
-                <MenuItem key={index} value={type}>
-                  {type}
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel
+                id="type-label"
+                shrink={props.values.type !== ''}
+              >
+                Company Type
+              </InputLabel>
+              <Field
+                disabled={props.disabled}
+                component={Select}
+                labelId="type-label"
+                name="type"
+                label="Company Type"
+                required
+                fullWidth
+                variant="outlined"
+                color="secondary"
+              >
+                <MenuItem value="">
+                  <em>None</em>
                 </MenuItem>
-              ))}
-            </Field>
-          </FormControl>
+                {visibleEntityTypes.map((type, index) => (
+                  <MenuItem key={index} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Field>
+            </FormControl>
           </Box>
         </Box>
         <Box>
@@ -122,8 +126,8 @@ export const SignUpForm: React.FC<Props> = (props) => {
           />
         </Box>
       </Box>
-      <Box sx={{ 
-        margin: theme => theme.spacing(3, 0, 2), 
+      <Box sx={{
+        margin: theme => theme.spacing(3, 0, 2),
         position: 'relative',
         display: 'flex',
         justifyContent: 'center'
@@ -144,8 +148,8 @@ export const SignUpForm: React.FC<Props> = (props) => {
           </div>
         </Tooltip>
         {isSubmitting && (
-          <CircularProgress 
-            size={24} 
+          <CircularProgress
+            size={24}
             sx={{
               color: theme => theme.palette.secondary.main,
               position: 'absolute',
