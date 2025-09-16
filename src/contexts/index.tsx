@@ -98,27 +98,6 @@ const resetWeb3Connection = () => {
   return Promise.reject(new Error('No se pudo reiniciar la conexión'));
 };
 
-// Función para verificar si Ganache está disponible
-const checkGanacheConnection = async () => {
-  try {
-    const response = await fetch('http://127.0.0.1:7545', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        method: 'eth_blockNumber',
-        params: [],
-        id: 1
-      })
-    });
-    return response.ok;
-  } catch (error) {
-    console.warn('Ganache no está disponible:', error);
-    return false;
-  }
-};
 
 const web3Instance = new Web3(getWeb3Provider());
 
@@ -238,7 +217,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           }
         });
     },
-    [state.managerContract]
+    [state.managerContract, state.web3.eth.Contract]
   );
 
   // =================================get methods======================================
@@ -249,7 +228,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       .catch(() => {
         return EmptyPromise;
       });
-  }, [state.account]);
+  }, [state.account, state.managerContract.methods]);
   const getProducts = useCallback(() => {
     return state.managerContract.methods
       .getProducts()
@@ -257,7 +236,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       .catch(() => {
         return EmptyPromise;
       });
-  }, [state.account]);
+  }, [state.account, state.managerContract.methods]);
   // ==========================================================================
 
   // =================================update methods======================================
@@ -265,11 +244,31 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     dispatch({ type: 'UPDATE_ACCOUNT', account: address });
   }, []);
 
+  const updateEntities = useCallback(() => {
+    const result: Promise<any> = getEntities();
+    return result.then((entities: any[]) => {
+      dispatch({
+        type: 'UPDATE_ENTITIES',
+        entities: entities ? entities.map(convertEntity) : []
+      });
+    });
+  }, [getEntities]);
+
+  const updateProducts = useCallback(() => {
+    const result: Promise<any> = getProducts();
+    return result.then((products: any[]) => {
+      dispatch({
+        type: 'UPDATE_PRODUCTS',
+        products: products.map(convertProduct)
+      });
+    });
+  }, [getProducts]);
+
   useEffect(() => {
     updateEntities();
     updateProducts();
     getEntity(state.account);
-  }, [state.account]);
+  }, [state.account, getEntity, updateEntities, updateProducts]);
 
   // On component mount
   useEffect(() => {
@@ -292,27 +291,8 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     state.web3.eth.getAccounts((error: any, accounts: any) => {
       if (accounts) updateAccount(accounts[0]);
     });
-  }, []);
+  }, [state.web3.eth, updateAccount]);
 
-  const updateEntities = useCallback(() => {
-    const result: Promise<any> = getEntities();
-    return result.then((entities: any[]) => {
-      dispatch({
-        type: 'UPDATE_ENTITIES',
-        entities: entities ? entities.map(convertEntity) : []
-      });
-    });
-    return result;
-  }, [getEntities]);
-  const updateProducts = useCallback(() => {
-    const result: Promise<any> = getProducts();
-    return result.then((products: any[]) => {
-      dispatch({
-        type: 'UPDATE_PRODUCTS',
-        products: products.map(convertProduct)
-      });
-    });
-  }, [getProducts, state.entity]);
   // ==========================================================================
 
   // =================================create methods======================================
@@ -331,7 +311,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           getEntity(state.account);
         });
     },
-    [state]
+    [state, getEntity, updateEntities]
   );
   const createProduct = useCallback(
     (params: ProductCreationArgs) => {
@@ -357,7 +337,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         .send({ from: state.account })
         .then(() => updateEntities());
     },
-    [state]
+    [state, updateEntities]
   );
   const purchaseProduct = useCallback(
     async (productAddress: string) => {
@@ -397,7 +377,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           updateProducts();
         });
     },
-    [state]
+    [state, enqueueSnackbar, updateProducts]
   );
 
   const prepareProduct = useCallback(
@@ -416,7 +396,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           updateProducts();
         });
     },
-    [state]
+    [state, updateProducts]
   );
 
   const timestampDeliveryStep = useCallback(
@@ -435,7 +415,7 @@ const GlobalContextProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           updateProducts();
         });
     },
-    [state]
+    [state, updateProducts]
   );
 
   // ==========================================================================
