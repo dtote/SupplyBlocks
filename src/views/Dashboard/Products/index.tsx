@@ -1,4 +1,4 @@
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Formik, FormikHelpers } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -7,7 +7,7 @@ import ProductCard from '../../../components/ProductCard';
 import Title from '../../../components/Title';
 import { GlobalContext } from '../../../contexts';
 import { Product } from '../../../types/Product';
-import { CreateProductForm } from './Form';
+import { CreateProductForm, CreateProductFormComponent } from './Form';
 import { CreateProductFormValidationSchema } from './ValidationSchema';
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -171,7 +171,7 @@ const ProductsView: React.FC<Props> = (props) => {
               onSubmit={submitCallback}
             >
               {(props) => {
-                return <CreateProductForm {...props} />;
+                return <CreateProductFormComponent {...props} />;
               }}
             </Formik>
           </StyledFormContainer>
